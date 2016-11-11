@@ -14,9 +14,13 @@ class CreateJoueursTable extends Migration
     public function up()
     {
         Schema::create('joueurs', function(Blueprint $table) {
-            $table->increments('idJoueurs');
+            $table->increments('id');
             $table->string('username')->unique();
-            $table->integer('idSalon');
+            $table->integer('salon_id')->unsigned();
+        });
+
+        Schema::table('joueurs', function(Blueprint $table){
+            $table->foreign('salon_id')->references('id')->on('salons');
         });
     }
 

@@ -14,9 +14,12 @@ class CreateMainsTable extends Migration
     public function up()
     {
         Schema::create('mains', function (Blueprint $table) {
-            $table->increments('idMain');
-            $table->integer('idJoueur');
-            $table->integer('valeurCarte');
+            $table->increments('id');
+            $table->integer('joueur_id')->unsigned();
+        });
+
+        Schema::table('mains', function(Blueprint $table){
+            $table->foreign('joueur_id')->references('id')->on('joueurs');
         });
     }
 

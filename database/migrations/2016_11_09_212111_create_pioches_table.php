@@ -13,9 +13,13 @@ class CreatePiochesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pioches', function (Blueprint $table) {
-            $table->integer('idPioche');
-            $table->integer('valeurCarte');
+        Schema::create('piles_cartes', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('salon_id')->unsigned();
+        });
+
+        Schema::table('piles_cartes', function(Blueprint $table){
+            $table->foreign('salon_id')->references('id')->on('salons');
         });
     }
 
@@ -26,6 +30,11 @@ class CreatePiochesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('pioches');
+        //A voir si utile
+        /*Schema::table('piles_cartes', function(Blueprint $table) {
+            $table->dropForeign('piles_cartes_salon_id_foreign');
+        });*/
+
+        Schema::drop('piles_cartes');
     }
 }

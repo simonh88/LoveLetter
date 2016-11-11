@@ -1,0 +1,5 @@
+No IDE instance has been found. New one will be started.
+Traceback (most recent call last):
+  File "/usr/local/bin/pstorm", line 106, in <module>
+    os.execv(RUN_PATH, [bin_file] + args)
+OSError: [Errno 2] No such file or directory

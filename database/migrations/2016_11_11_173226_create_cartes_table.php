@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSalonsTable extends Migration
+class CreateCartesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +12,11 @@ class CreateSalonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('salons', function(Blueprint $table) {
+        Schema::create('cartes', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('nb_joueurs')->unsigned();
-            $table->integer('idJoueurProchain');
-            $table->integer('idPioche');
+            $table->string('nom',25);
+            $table->integer('valeur');
+            $table->binary('image');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateSalonsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('salons');
+        Schema::drop('cartes');
     }
 }
