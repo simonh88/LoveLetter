@@ -16,6 +16,7 @@ class CreatePiochesTable extends Migration
         Schema::create('piles_cartes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('salon_id')->unsigned();
+            $table->boolean('estPioche');
         });
 
         Schema::table('piles_cartes', function(Blueprint $table){
