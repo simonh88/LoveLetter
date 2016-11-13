@@ -31,10 +31,9 @@ class CreatePiochesTable extends Migration
      */
     public function down()
     {
-        //A voir si utile
-        /*Schema::table('piles_cartes', function(Blueprint $table) {
+        Schema::table('piles_cartes', function(Blueprint $table) {
             $table->dropForeign('piles_cartes_salon_id_foreign');
-        });*/
+        });
 
         Schema::drop('piles_cartes');
     }

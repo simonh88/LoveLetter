@@ -15,10 +15,12 @@ class CreateMainsTable extends Migration
     {
         Schema::create('mains', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('carte_id')->unsigned();
             $table->integer('joueur_id')->unsigned();
         });
 
         Schema::table('mains', function(Blueprint $table){
+            $table->foreign('carte_id')->references('id')->on('cartes');
             $table->foreign('joueur_id')->references('id')->on('joueurs');
         });
     }
@@ -30,6 +32,10 @@ class CreateMainsTable extends Migration
      */
     public function down()
     {
+        Schema::table('mains', function(Blueprint $table) {
+            $table->dropForeign('mains_carte_id_foreign');
+            $table->dropForeign('mains_carte_id_foreign');
+        });
         Schema::drop('mains');
     }
 }

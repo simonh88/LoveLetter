@@ -10,4 +10,11 @@ class Salon extends Model
     protected $primaryKey = 'id';//Par défaut, pas besoin de le spécifier là
 
     public $timestamps = false;
+
+    public function joueurs(){
+        return $this->hasMany('App\Models\Joueur');
+    }
+    public function  cartesDansPile(){
+        return $this->hasMany('App\Models\CartesDansPile');
+    }
 }

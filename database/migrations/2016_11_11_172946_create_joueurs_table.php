@@ -31,6 +31,10 @@ class CreateJoueursTable extends Migration
      */
     public function down()
     {
+
+        Schema::table('joueurs', function(Blueprint $table) {
+            $table->dropForeign('joueurs_salon_id_foreign');
+        });
         Schema::drop('joueurs');
     }
 }

@@ -10,4 +10,12 @@ class PileCartes extends Model
     protected $primaryKey = 'id';//Par défaut, pas besoin de le spécifier là
 
     public $timestamps = false;
+
+    public function salon(){
+        return $this->belongsTo('App\Models\Salon');
+    }
+
+    public function cartesDansPile(){
+        return $this->hasMany('App\Models\CartesDansPile');
+    }
 }
