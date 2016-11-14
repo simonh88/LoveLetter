@@ -35,7 +35,7 @@ class AccueilController extends Controller
      * @return mixed
      */
     protected function chercherSalon(){
-        $salon = Salon::where('nb_joueurs_presents', '<', 'nb_joueurs_max')->where('is_playing', 0)->first();
+        $salon = Salon::where('is_playing', false)->whereColumn('nb_joueurs_presents', '<', 'nb_joueurs_max')->first();
 
         if(empty($salon)){
             var_dump($salon);
