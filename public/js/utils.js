@@ -23,7 +23,7 @@ function myturn() {
             cards.push(card);
             console.log("New card : " + card);
         } else {
-            mylog('->NO\n')
+            mylog('->NO\n');
         }
     });
     setTimeout(myturn, 1000);
