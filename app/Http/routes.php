@@ -15,3 +15,6 @@
 
 Route::get('/', 'AccueilController@getInfos');
 Route::post('/', 'AccueilController@postInfos');
+
+
+Route::get('salons/{n}', 'SalonsController@show')->where('n', '[1-3]+');

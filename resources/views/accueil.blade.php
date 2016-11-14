@@ -27,7 +27,7 @@
         </style>
     <div class="container">
         <div class="content">
-            <form method="POST" action="{!! url('salons') !!}" accept-charset="UTF-8">
+            <form method="POST" action="{!! url('/') !!}" accept-charset="UTF-8">
                 {!! csrf_field() !!}
                 <label for="username">Entrez votre pseudo : </label>
                 <input name="username" type="text" id="username">

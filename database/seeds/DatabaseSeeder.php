@@ -13,13 +13,19 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
         DB::table('salons')->insert([
-            'nb_joueurs' => 2
+            'nb_joueurs_max' => 2,
+            'is_playing' => false,
+            'nb_joueurs_presents' => 0
         ]);
         DB::table('salons')->insert([
-            'nb_joueurs' => 3
+            'nb_joueurs_max' => 3,
+            'is_playing' => false,
+            'nb_joueurs_presents' => 0
         ]);
         DB::table('salons')->insert([
-            'nb_joueurs' => 4
+            'nb_joueurs_max' => 4,
+            'is_playing' => false,
+            'nb_joueurs_presents' => 0
         ]);
 
         /**Ajout des cartes, il faudrait après mettre les images**/

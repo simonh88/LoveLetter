@@ -15,8 +15,10 @@ class CreateSalonsTable extends Migration
     {
         Schema::create('salons', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('nb_joueurs')->unsigned();
+            $table->integer('nb_joueurs_max')->unsigned();
             $table->integer('id_prochain_joueur')->unsigned();
+            $table->boolean('is_playing');
+            $table->integer('nb_joueurs_presents')->unsigned();
         });
     }
 
