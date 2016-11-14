@@ -5,17 +5,25 @@
 // Tableau contenant les cartes du joueurs
 var cards = [];
 
+function mylog(str) {
+    var zoneAffichage = $('#zoneAffichage');
+    zoneAffichage.val(zoneAffichage.val() + str);
+}
+
 function myturn() {
-    $.get('/testmyturn', function (data) {
+    $.get('/myturn', function (data) {
         // res est un tableau
         // myturn de type booléen
         // card de type entier utilisé quand myturn est vrai
+        mylog('My turn?\n');
         var res = $.parseJSON(data);
         if (res['myturn']) {
             // C'est le tour du joueur courant
             var card = res['card'];
             cards.push(card);
             console.log("New card : " + card);
+        } else {
+            mylog('->NO\n')
         }
     });
     setTimeout(myturn, 1000);

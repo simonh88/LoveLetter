@@ -17,3 +17,5 @@ Route::post('/', 'AccueilController@postInfos');
 
 
 Route::get('salons/{n}', 'SalonsController@show');
+
+Route::get('myturn', 'JeuxController@myturn');
