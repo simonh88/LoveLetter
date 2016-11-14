@@ -30,11 +30,31 @@ class AccueilController extends Controller
         return redirect("salons/".$idSalon);
     }
 
+    /**
+     * recherche d'un salon libre, s'il n'y en a pas, on en crée un
+     * @return mixed
+     */
     protected function chercherSalon(){
-        $salon = Salon::where('nb_joueurs_max', '>', 'nb_joueurs_presents')->first();
+        $salon = Salon::where('nb_joueurs_presents', '<', 'nb_joueurs_max')->where('is_playing', 0)->first();
+
+        if(empty($salon)){
+            var_dump($salon);
+            $salon = $this->creationSalon();
+        }
 
         $salon->nb_joueurs_presents += 1;
         $salon->save();
         return $salon->id;
+    }
+
+    /**
+     * Creation d'un salon
+     */
+    protected function creationSalon(){
+        return Salon::create([
+           'nb_joueurs_max' => 4,
+            'nb_joueurs_presents' => 0,
+            'is_playing' => false
+        ]);
     }
 }

@@ -11,6 +11,9 @@ class Salon extends Model
 
     public $timestamps = false;
 
+    protected $fillable = ['nb_joueurs_max', 'nb_joueurs_presents', 'is_playing'];
+
+
     public function joueurs(){
         return $this->hasMany('App\Models\Joueur');
     }
