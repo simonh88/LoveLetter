@@ -41,14 +41,16 @@ class AccueilController extends Controller
         $salon = Salon::where('is_playing', false)->whereColumn('nb_joueurs_presents', '<', 'nb_joueurs_max')->first();
 
         if(empty($salon)){
-            var_dump($salon);
             $salon = $this->creationSalon();
         }
 
         $salon->nb_joueurs_presents += 1;
         $salon->save();
 
-        // TODO Quand le salon est plein, on set id_prochain joueur
+        // TODO Quand le salon est plein, on appelle nextPlayer qui set id_prochain_joueur
+        if ($salon->isFull()) {
+            $salon->nextPlayer();
+        }
 
         return $salon->id;
     }

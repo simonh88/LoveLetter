@@ -30,4 +30,11 @@ class JeuxController extends Controller
 
         return json_encode($res);
     }
+
+    public function play(Request $req, $card) {
+        $username = $req->session()->get('username');
+        $joueur = Joueur::where('username', $username)->firstOrFail();
+        $salon = Salon::where('id', $joueur->salon_id)->firstOrFail();
+        $salon->nextPlayer();
+    }
 }

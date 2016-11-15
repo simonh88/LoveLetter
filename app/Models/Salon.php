@@ -22,8 +22,20 @@ class Salon extends Model
     }
 
     public function nextPlayer() {
-        $joueursDansSalon = Salon::where('salon_id', $this->id);
+        $id_prochain_joueur = $this->id_prochain_joueur;
+        $prochainJoueur = Joueur::where('salon_id', $this->id)->where('id', '>', $id_prochain_joueur)->first();
 
-        // TODO chercher quel joueur n'a pas encore joué la manche et set id_prochain_joueur
+        if ($prochainJoueur) {
+            $this->id_prochain_joueur = $prochainJoueur->id;
+        } else {
+            $this->id_prochain_joueur = 0;
+            $this->nextPlayer();
+        }
+
+        $this->save();
+    }
+
+    public function isFull() {
+        return $this->nb_joueurs_max == $this->nb_joueurs_presents;
     }
 }

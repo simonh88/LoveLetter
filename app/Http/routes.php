@@ -26,3 +26,5 @@ Route::get('testsession', function (\Illuminate\Http\Request $req) {
     $res = ob_get_clean();
     return $res;
 });
+
+Route::get('play/{card}', 'JeuxController@play');

@@ -12,6 +12,7 @@ function mylog(str) {
 }
 
 function myturn() {
+    setTimeout(myturn, 1000);
     if (ismyturn) return;
     $.get('/myturn', function (data) {
         // res est un tableau
@@ -27,19 +28,24 @@ function myturn() {
             mylog("Vous avez pioché un " + card);
         }
     });
-    setTimeout(myturn, 1000);
 }
 
 // Nécessité de vérifier que le joueur possède bien la carte qu'il joue
 function play(card) {
+    if (!ismyturn) return;
     var i = cards.indexOf(card);
+    console.log(cards);
     if (i != -1) {
         $.get('/play/' + card, function (data) {
+            mylog("Vous avez joué un " + card);
             // Supprime la carte à l'index i, celle qui va être joué
             cards.splice(i, i);
 
             // Plus tard : gestion des effets
+            ismyturn = false;
         })
+    } else {
+        mylog("Vous ne possedez pas cette carte");
     }
 }
 
