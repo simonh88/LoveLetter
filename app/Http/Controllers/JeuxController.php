@@ -18,18 +18,16 @@ class JeuxController extends Controller
     public function myturn(Request $req) {
 
         $username = $req->session()->get('username');
-        $turn = self::checkTurn($username);
+        $joueur = Joueur::where('username', $username)->firstOrFail();
+        $turn = $joueur->checkTurn();
         $res = array('myturn' => $turn);
 
         // TODO si $turn est vrai, le joueur pioche une carte
+        if ($turn) {
+            $res['card'] = 4;
 
+        }
 
         return json_encode($res);
-    }
-
-    public static function checkTurn($username) {
-        $joueur = Joueur::where('username', $username)->firstOrFail();
-        $salon = Salon::where('id', $joueur->salon_id)->firstOrFail();
-        return $joueur->id == $salon->id_prochain_joueur;
     }
 }

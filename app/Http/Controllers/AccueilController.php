@@ -47,6 +47,9 @@ class AccueilController extends Controller
 
         $salon->nb_joueurs_presents += 1;
         $salon->save();
+
+        // TODO Quand le salon est plein, on set id_prochain joueur
+
         return $salon->id;
     }
 

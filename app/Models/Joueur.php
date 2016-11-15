@@ -21,4 +21,14 @@ class Joueur extends Model
     public function salon(){
         return $this->belongsTo('App\Models\Salon');
     }
+
+    public function checkTurn() {
+        $salon = Salon::where('id', $this->salon_id)->firstOrFail();
+        return $salon->id_prochain_joueur == $this->id;
+    }
+
+    public function endTurn() {
+        $salon = Salon::where('id', $this->salon_id)->firstOrFail();
+        $salon->nextPlayer();
+    }
 }

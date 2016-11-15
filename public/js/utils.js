@@ -4,26 +4,27 @@
 
 // Tableau contenant les cartes du joueurs
 var cards = [];
+var ismyturn = false;
 
 function mylog(str) {
     var zoneAffichage = $('#zoneAffichage');
-    zoneAffichage.val(zoneAffichage.val() + str);
+    zoneAffichage.val(zoneAffichage.val() + "\n" + str + "\n");
 }
 
 function myturn() {
+    if (ismyturn) return;
     $.get('/myturn', function (data) {
         // res est un tableau
         // myturn de type booléen
         // card de type entier utilisé quand myturn est vrai
-        mylog('My turn?\n');
         var res = $.parseJSON(data);
         if (res['myturn']) {
+            ismyturn = true;
             // C'est le tour du joueur courant
+            mylog("C'est votre tour !");
             var card = res['card'];
             cards.push(card);
-            console.log("New card : " + card);
-        } else {
-            mylog('->NO\n');
+            mylog("Vous avez pioché un " + card);
         }
     });
     setTimeout(myturn, 1000);

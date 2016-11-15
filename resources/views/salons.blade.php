@@ -1,9 +1,7 @@
 @extends('template')
 @section('contenu')
 
-    <textarea id="zoneAffichage" cols="60" rows="20">
-        Bienvenue {{$joueur}}, vous êtes dans le salon {{$idSalon}}
-    </textarea><br>
+    <textarea id="zoneAffichage" cols="60" rows="20">Bienvenue {{$joueur}}, vous êtes dans le salon {{$idSalon}}</textarea><br>
     <input type="text" id="input">
     <button id="bouton">Jouer</button>
     <script type="text/javascript">

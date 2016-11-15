@@ -20,4 +20,10 @@ class Salon extends Model
     public function  cartesDansPile(){
         return $this->hasMany('App\Models\CartesDansPile');
     }
+
+    public function nextPlayer() {
+        $joueursDansSalon = Salon::where('salon_id', $this->id);
+
+        // TODO chercher quel joueur n'a pas encore joué la manche et set id_prochain_joueur
+    }
 }
