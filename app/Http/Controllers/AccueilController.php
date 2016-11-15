@@ -21,7 +21,7 @@ class AccueilController extends Controller
     public function postInfos(Request $request){
         $joueur = Joueur::firstOrNew(['username' => $request->input('username')]);
 
-        $request->session()->set('user_id', $joueur->id);
+        $request->session()->set('username', $joueur->username);
 
         $idSalon = $this->chercherSalon();
         $joueur->salon_id = $idSalon;

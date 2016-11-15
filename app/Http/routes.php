@@ -19,3 +19,10 @@ Route::post('/', 'AccueilController@postInfos');
 Route::get('salons/{n}', 'SalonsController@show');
 
 Route::get('myturn', 'JeuxController@myturn');
+
+Route::get('testsession', function (\Illuminate\Http\Request $req) {
+    ob_start();
+    var_dump($req->session());
+    $res = ob_get_clean();
+    return $res;
+});
