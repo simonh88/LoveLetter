@@ -20,8 +20,8 @@ class CreateMainsTable extends Migration
         });
 
         Schema::table('mains', function(Blueprint $table){
-            $table->foreign('carte_id')->references('id')->on('cartes');
-            $table->foreign('joueur_id')->references('id')->on('joueurs');
+            $table->foreign('carte_id')->references('id')->on('cartes')->onDelete('cascade');
+            $table->foreign('joueur_id')->references('id')->on('joueurs')->onDelete('cascade');
         });
     }
 
@@ -32,10 +32,6 @@ class CreateMainsTable extends Migration
      */
     public function down()
     {
-        Schema::table('mains', function(Blueprint $table) {
-            $table->dropForeign('mains_carte_id_foreign');
-            $table->dropForeign('mains_carte_id_foreign');
-        });
         Schema::drop('mains');
     }
 }

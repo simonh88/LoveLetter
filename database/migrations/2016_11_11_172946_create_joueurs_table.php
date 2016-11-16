@@ -21,7 +21,7 @@ class CreateJoueursTable extends Migration
         });
 
         Schema::table('joueurs', function(Blueprint $table){
-            $table->foreign('salon_id')->references('id')->on('salons');
+            $table->foreign('salon_id')->references('id')->on('salons')->onDelete('cascade');
         });
     }
 
@@ -32,10 +32,6 @@ class CreateJoueursTable extends Migration
      */
     public function down()
     {
-
-        Schema::table('joueurs', function(Blueprint $table) {
-            $table->dropForeign('joueurs_salon_id_foreign');
-        });
         Schema::drop('joueurs');
     }
 }

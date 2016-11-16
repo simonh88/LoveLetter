@@ -19,8 +19,8 @@ class CreateCartesPileTable extends Migration
         });
 
         Schema::table('cartes_dans_pile', function(Blueprint $table){
-            $table->foreign('carte_id')->references('id')->on('cartes');
-            $table->foreign('pile_cartes_id')->references('id')->on('piles_cartes');
+            $table->foreign('carte_id')->references('id')->on('cartes')->onDelete('cascade');
+            $table->foreign('pile_cartes_id')->references('id')->on('piles_cartes')->onDelete('cascade');
         });
     }
 
@@ -31,11 +31,6 @@ class CreateCartesPileTable extends Migration
      */
     public function down()
     {
-
-        Schema::table('cartes_dans_pile', function(Blueprint $table) {
-            $table->dropForeign('cartes_dans_pile_carte_id_foreign');
-            $table->dropForeign('cartes_dans_pile_salon_id_foreign');
-        });
         Schema::drop('cartes_dans_pile');
     }
 }

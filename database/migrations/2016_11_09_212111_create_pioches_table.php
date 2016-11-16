@@ -20,7 +20,7 @@ class CreatePiochesTable extends Migration
         });
 
         Schema::table('piles_cartes', function(Blueprint $table){
-            $table->foreign('salon_id')->references('id')->on('salons');
+            $table->foreign('salon_id')->references('id')->on('salons')->onDelete('cascade');
         });
     }
 
@@ -31,10 +31,6 @@ class CreatePiochesTable extends Migration
      */
     public function down()
     {
-        Schema::table('piles_cartes', function(Blueprint $table) {
-            $table->dropForeign('piles_cartes_salon_id_foreign');
-        });
-
         Schema::drop('piles_cartes');
     }
 }
