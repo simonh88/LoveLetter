@@ -10,7 +10,7 @@ class Joueur extends Model
     protected $table = 'joueurs';
     protected $primaryKey = 'id';//Par défaut, pas besoin de le spécifier là
 
-    protected $fillable = ['username', 'salon_id'];
+    protected $fillable = ['username', 'salon_id', 'aPioche'];
 
     public $timestamps = false;
 
@@ -58,7 +58,12 @@ class Joueur extends Model
         CartesDansPile::destroy($carteID);
 
         Main::ajouterCarte($this->id, $carteID);
-
+        $this->aPioche = true;
         return $carte;
     }
+
+    public function aPioche() {
+        return $this->aPioche;
+    }
+
 }

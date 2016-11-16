@@ -18,6 +18,7 @@ class CreateJoueursTable extends Migration
             $table->string('username')->unique();
             $table->integer('salon_id')->unsigned();
             $table->boolean('is_ready');
+            $table->boolean('aPioche');
         });
 
         Schema::table('joueurs', function(Blueprint $table){

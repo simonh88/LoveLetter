@@ -20,12 +20,10 @@ class JeuxController extends Controller
         $username = $req->session()->get('username');
         $joueur = Joueur::where('username', $username)->firstOrFail();
         $turn = $joueur->checkTurn();
-        $res = array('myturn' => $turn);
 
-        // TODO si $turn est vrai, le joueur pioche une carte
         // TODO, en plus de lui renvoyé la carte qu'il a pioché, on peut lui renvoyé toute sa main
-        // ça permettrait au mec de se resynchro avec le serveur à cas ou il quitte la page ou autre
-        // + si il essaie de cheat en modifiant le JS
+        // TODO ça permettrait au mec de se resynchro avec le serveur à cas ou il quitte la page ou autre
+        // TODO + si il essaie de cheat en modifiant le JS
 
         // De toute façon on peut blinder le json
 
@@ -38,9 +36,11 @@ class JeuxController extends Controller
         // A la fin d'un tour, on set aPioché à faux pour tous les joueurs
         // ensuite on pourra supprimer ismyturn dans le script js
 
-        if ($turn) {
+        if ($joueur->aPioche()) $turn = false;
 
-            $res['card'] = $joueur->piocherCarte()->valeur;
+        $res = array('myturn' => $turn);
+        if ($turn) {
+                $res['card'] = $joueur->piocherCarte()->valeur;
         }
 
         return json_encode($res);
