@@ -14,6 +14,11 @@ class Joueur extends Model
 
     public $timestamps = false;
 
+    public static function creerJoueur($username) {
+        $joueur = Joueur::firstOrNew(['username' => $username]);
+        return $joueur;
+    }
+
     public function main(){
         return $this->hasMany('App\Models\Main');
     }

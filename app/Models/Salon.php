@@ -108,4 +108,8 @@ class Salon extends Model
             ]);
         }
     }
+
+    public function distribuerCartes() {
+        // TODO première distribution en début de partie
+    }
 }
