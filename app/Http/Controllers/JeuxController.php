@@ -25,7 +25,7 @@ class JeuxController extends Controller
         // TODO si $turn est vrai, le joueur pioche une carte
         if ($turn) {
             $res['card'] = 4;
-
+            // $res['card'] = $joueur->piocherCarte();
         }
 
         return json_encode($res);

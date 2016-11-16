@@ -41,4 +41,12 @@ class Joueur extends Model
     public function getSalon() {
         return Salon::where('id', $this->salon_id);
     }
+
+    public function piocherCarte() {
+        $salon = $this->getSalon();
+        $pioche = PileCartes::where('salon_id', $salon->id)->where('estPioche', true);
+        $carte = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->first();
+        CartesDansPile::destroy($carte->id);
+        return $carte;
+    }
 }

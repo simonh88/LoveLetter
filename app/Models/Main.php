@@ -16,4 +16,8 @@ class Main extends Model
   public function cartes(){
       return $this->belongsToMany('App\Models\Cartes');
   }
+
+  public function ajouterCarte($idJoueur) {
+      // TODO ajouterCarte
+  }
 }
