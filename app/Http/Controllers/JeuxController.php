@@ -36,7 +36,7 @@ class JeuxController extends Controller
         // A la fin d'un tour, on set aPioché à faux pour tous les joueurs
         // ensuite on pourra supprimer ismyturn dans le script js
 
-        if ($joueur->aPioche()) $turn = false;
+        //if ($joueur->aPioche()) $turn = false;
 
         $res = array('myturn' => $turn);
         if ($turn) {

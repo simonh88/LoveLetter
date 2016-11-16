@@ -117,6 +117,13 @@ class Salon extends Model
     }
 
     public function distribuerCartes() {
-        // TODO première distribution en début de partie
+        $joueurs = Joueur::where('salon_id', $this->id)->toArray();
+
+        $pioche = $pioche = PileCartes::where('salon_id', $this->id)->where('estPioche', true)->first();
+        foreach ($joueurs as $joueur){
+            $idCarte = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->first();
+            Main::ajouterCarte($joueur->id, $idCarte->carte_id);
+            CartesDansPile::destroy($idCarte->id);
+        }
     }
 }

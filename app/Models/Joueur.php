@@ -10,7 +10,7 @@ class Joueur extends Model
     protected $table = 'joueurs';
     protected $primaryKey = 'id';//Par défaut, pas besoin de le spécifier là
 
-    protected $fillable = ['username', 'salon_id', 'aPioche'];
+    protected $fillable = ['username', 'salon_id'];
 
     public $timestamps = false;
 
@@ -52,18 +52,16 @@ class Joueur extends Model
 
         $pioche = PileCartes::where('salon_id', $salon->id)->where('estPioche', true)->first();
 
-        $carteID = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->first()->id;
-        $carte = Cartes::where('id', $carteID)->first();
+        $carteID = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->first();
+        $carte = Cartes::where('id', $carteID->carte_id)->first();
 
-        CartesDansPile::destroy($carteID);
 
-        Main::ajouterCarte($this->id, $carteID);
-        $this->aPioche = true;
+
+        CartesDansPile::destroy($carteID->id);
+
+        Main::ajouterCarte($this->id, $carteID->carte_id);
         return $carte;
     }
 
-    public function aPioche() {
-        return $this->aPioche;
-    }
 
 }
