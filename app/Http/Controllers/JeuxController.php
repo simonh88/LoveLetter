@@ -23,8 +23,23 @@ class JeuxController extends Controller
         $res = array('myturn' => $turn);
 
         // TODO si $turn est vrai, le joueur pioche une carte
+        // TODO, en plus de lui renvoyé la carte qu'il a pioché, on peut lui renvoyé toute sa main
+        // ça permettrait au mec de se resynchro avec le serveur à cas ou il quitte la page ou autre
+        // + si il essaie de cheat en modifiant le JS
+
+        // De toute façon on peut blinder le json
+
+        // TODO Table actions qui stock tout ce qui se passe dans un salon -> on balance ça dans le json aussi
+
+
+        // TODO Faire en sorte que si le joueur appelle myturn deux fois il ne pioche pas deux fois -> nouvel attribut dans la DB ?
+
+        // Si le joueur a déjà pioché, on set $turn à faux
+        // A la fin d'un tour, on set aPioché à faux pour tous les joueurs
+        // ensuite on pourra supprimer ismyturn dans le script js
+
         if ($turn) {
-            //$res['card'] = 4;
+
             $res['card'] = $joueur->piocherCarte()->valeur;
         }
 

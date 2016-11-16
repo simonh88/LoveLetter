@@ -49,6 +49,11 @@ function play(card) {
     }
 }
 
+function playtest() {
+    var c = cards[0]
+    play(c)
+}
+
 function go () {
     myturn();
 }

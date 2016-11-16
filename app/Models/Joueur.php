@@ -52,9 +52,12 @@ class Joueur extends Model
 
         $pioche = PileCartes::where('salon_id', $salon->id)->where('estPioche', true)->first();
 
-        $carte = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->first();
-        CartesDansPile::destroy($carte->id);
-        Main::ajouterCarte($this->id, $carte->id);
+        $carteID = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->first()->id;
+        $carte = Cartes::where('id', $carteID)->first();
+
+        CartesDansPile::destroy($carteID);
+
+        Main::ajouterCarte($this->id, $carteID);
 
         return $carte;
     }

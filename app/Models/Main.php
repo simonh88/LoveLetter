@@ -8,7 +8,7 @@ class Main extends Model
 {
     protected $table='mains';
     protected $primaryKey='id';
-    protected $fillable = ['carte_id'];
+    protected $fillable = ['joueur_id', 'carte_id'];
     public $timestamps = false;
 
   public function joueur(){
@@ -22,7 +22,7 @@ class Main extends Model
   public static function ajouterCarte($idJoueur, $idCarte) {
       Main::create([
           'joueur_id' => $idJoueur,
-          'carte' => $idCarte
+          'carte_id' => $idCarte
       ]);
 
   }
