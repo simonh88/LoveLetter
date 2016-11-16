@@ -34,7 +34,7 @@ class CreateMainsTable extends Migration
     {
         Schema::table('mains', function(Blueprint $table) {
             $table->dropForeign('mains_carte_id_foreign');
-            $table->dropForeign('mains_carte_id_foreign');
+            $table->dropForeign('mains_joueur_id_foreign');
         });
         Schema::drop('mains');
     }
