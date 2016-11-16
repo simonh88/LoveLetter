@@ -12,91 +12,93 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-        DB::table('salons')->insert([
-            'nb_joueurs_max' => 2,
-            'is_playing' => false,
-            'nb_joueurs_presents' => 0
-        ]);
-        DB::table('salons')->insert([
-            'nb_joueurs_max' => 3,
-            'is_playing' => false,
-            'nb_joueurs_presents' => 0
-        ]);
-        DB::table('salons')->insert([
-            'nb_joueurs_max' => 4,
-            'is_playing' => false,
-            'nb_joueurs_presents' => 0
-        ]);
 
         /**Ajout des cartes, il faudrait après mettre les images**/
         DB::table('cartes')->insert([
             'nom' => 'Princess',
-            'valeur' => 8
+            'valeur' => 8,
+            'image' => 'database/img/princess.jpg'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Countess',
-            'valeur' => 7
+            'valeur' => 7,
+            'image' => 'database/img/countess.png'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'King',
-            'valeur' => 6
+            'valeur' => 6,
+            'image' => 'database/img/king.jpg'
         ]);
         //Deux princes
         DB::table('cartes')->insert([
             'nom' => 'Prince',
-            'valeur' => 5
+            'valeur' => 5,
+            'image' => 'database/img/prince.jpg'
+
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Prince',
-            'valeur' => 5
+            'valeur' => 5,
+            'image' => 'database/img/prince.jpg'
         ]);
         //2 Handmaid
         DB::table('cartes')->insert([
             'nom' => 'Handmaid',
-            'valeur' => 4
+            'valeur' => 4,
+            'image' => 'database/img/handmaid.png'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Handmaid',
-            'valeur' => 4
+            'valeur' => 4,
+            'image' => 'database/img/handmaid.png'
         ]);
         //2 Barons
         DB::table('cartes')->insert([
             'nom' => 'Baron',
-            'valeur' => 3
+            'valeur' => 3,
+            'image' => 'database/img/baron.jpg'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Baron',
-            'valeur' => 3
+            'valeur' => 3,
+            'image' => 'database/img/baron.jpg'
         ]);
         //2 Priest
         DB::table('cartes')->insert([
             'nom' => 'Priest',
-            'valeur' => 2
+            'valeur' => 2,
+            'image' => 'database/img/priest.jpg'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Priest',
-            'valeur' => 2
+            'valeur' => 2,
+            'image' => 'database/img/priest.jpg'
         ]);
         //5 Guard
         DB::table('cartes')->insert([
             'nom' => 'Guard',
-            'valeur' => 1
+            'valeur' => 1,
+            'image' => 'database/img/guard.jpg'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Guard',
-            'valeur' => 1
+            'valeur' => 1,
+            'image' => 'database/img/guard.jpg'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Guard',
-            'valeur' => 1
+            'valeur' => 1,
+            'image' => 'database/img/guard.jpg'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Guard',
-            'valeur' => 1
+            'valeur' => 1,
+            'image' => 'database/img/guard.jpg'
         ]);
         DB::table('cartes')->insert([
             'nom' => 'Guard',
-            'valeur' => 1
+            'valeur' => 1,
+            'image' => 'database/img/guard.jpg'
         ]);
     }
 }

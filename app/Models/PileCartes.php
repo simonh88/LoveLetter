@@ -11,6 +11,8 @@ class PileCartes extends Model
 
     public $timestamps = false;
 
+    protected $fillable = ['salon_id'];
+
     public function salon(){
         return $this->belongsTo('App\Models\Salon');
     }

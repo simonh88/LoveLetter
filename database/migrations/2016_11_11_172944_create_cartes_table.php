@@ -16,7 +16,7 @@ class CreateCartesTable extends Migration
             $table->increments('id');
             $table->string('nom',25);
             $table->integer('valeur');
-            $table->binary('image');
+            $table->string('image', 255);//Chemin d'accès de l'image
         });
     }
 

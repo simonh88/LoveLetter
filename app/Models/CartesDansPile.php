@@ -11,7 +11,7 @@ class CartesDansPile extends Model
 
     public $timestamps = false;
 
-
+    protected $fillable = ['carte_id', 'pile_cartes_id'];
 
     public function pileCartes(){
         return $this->belongsTo('App\Models\CartesDansPile');

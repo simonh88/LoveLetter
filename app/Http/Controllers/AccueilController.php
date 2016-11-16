@@ -4,12 +4,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Cartes;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Session;
 use App\Joueur;
 use App\Salon;
+use App\PileCartes;
+use App\CartesDansPile;
 
 
 class AccueilController extends Controller
@@ -57,10 +60,52 @@ class AccueilController extends Controller
      * Creation d'un salon
      */
     protected function creationSalon(){
-        return Salon::create([
+        $salon =  Salon::create([
            'nb_joueurs_max' => 4,
             'nb_joueurs_presents' => 0,
             'is_playing' => false
         ]);
+        $this->peuplementCartesDansPioche($this->creationPilesDeSalon($salon->id));
+        return $salon;
     }
+
+    /**
+     * On crée deux piles une pour les cartes défaussées
+     * et une autre pour la pioche
+     * @param $idSalon
+     * @return mixed
+     */
+    protected function creationPilesDeSalon($idSalon){
+        //Creation de la pile pour defausser les cartes
+        $defausse = PileCartes::create([
+            'salon_id' => $idSalon,
+            'estPioche' => false
+        ]);
+
+
+        $pioche = PileCartes::create([
+            'salon_id' =>$idSalon,
+            'estPioche' => true
+        ]);
+        $pioche->save();
+
+        return $pioche->id;
+    }
+
+    /**
+     * on peuple la pioche avec toutes les cartes disponibles
+     * @param $idPioche
+     */
+    protected function peuplementCartesDansPioche($idPioche){
+        $cartes = Cartes::all();
+        foreach ($cartes as $carte){
+            echo($carte->id);
+            $c = CartesDansPile::firstOrNew([
+                'carte_id' => $carte->id,
+                'pile_cartes_id' => $idPioche
+            ]);
+            $c->save();
+        }
+    }
+
 }
