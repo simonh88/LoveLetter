@@ -11,23 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-        DB::table('salons')->insert([
-            'nb_joueurs_max' => 2,
-            'is_playing' => false,
-            'nb_joueurs_presents' => 0
-        ]);
-        DB::table('salons')->insert([
-            'nb_joueurs_max' => 3,
-            'is_playing' => false,
-            'nb_joueurs_presents' => 0
-        ]);
-        DB::table('salons')->insert([
-            'nb_joueurs_max' => 4,
-            'is_playing' => false,
-            'nb_joueurs_presents' => 0
-        ]);
-
         /**Ajout des cartes, il faudrait après mettre les images**/
         DB::table('cartes')->insert([
             'nom' => 'Princess',
@@ -98,5 +81,7 @@ class DatabaseSeeder extends Seeder
             'nom' => 'Guard',
             'valeur' => 1
         ]);
+
+        \App\Salon::creationSalon(2);
     }
 }

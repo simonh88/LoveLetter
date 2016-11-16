@@ -31,4 +31,14 @@ class Joueur extends Model
         $salon = Salon::where('id', $this->salon_id)->firstOrFail();
         $salon->nextPlayer();
     }
+
+    public function setSalon($idSalon) {
+        $this->salon_id = $idSalon;
+        $this->is_ready = 1;
+        $this->save();
+    }
+
+    public function getSalon() {
+        return Salon::where('id', $this->salon_id);
+    }
 }

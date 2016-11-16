@@ -23,46 +23,13 @@ class AccueilController extends Controller
 
         $request->session()->set('username', $joueur->username);
 
-        $idSalon = $this->chercherSalon();
-        $joueur->salon_id = $idSalon;
-        $joueur->is_ready = 1;
-        $joueur->save();
-
+        $idSalon = Salon::chercherSalon();
+        $joueur->setSalon($idSalon);
 
 
         return redirect("salons/".$idSalon);
     }
 
-    /**
-     * recherche d'un salon libre, s'il n'y en a pas, on en crée un
-     * @return mixed
-     */
-    protected function chercherSalon(){
-        $salon = Salon::where('is_playing', false)->whereColumn('nb_joueurs_presents', '<', 'nb_joueurs_max')->first();
 
-        if(empty($salon)){
-            $salon = $this->creationSalon();
-        }
 
-        $salon->nb_joueurs_presents += 1;
-        $salon->save();
-
-        // TODO Quand le salon est plein, on appelle nextPlayer qui set id_prochain_joueur
-        if ($salon->isFull()) {
-            $salon->nextPlayer();
-        }
-
-        return $salon->id;
-    }
-
-    /**
-     * Creation d'un salon
-     */
-    protected function creationSalon(){
-        return Salon::create([
-           'nb_joueurs_max' => 4,
-            'nb_joueurs_presents' => 0,
-            'is_playing' => false
-        ]);
-    }
 }
