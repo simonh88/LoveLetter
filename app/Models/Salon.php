@@ -76,6 +76,8 @@ class Salon extends Model
             'is_playing' => false
         ]);
 
+        $salon->save();
+
         $pioche = PileCartes::create([
             'salon_id' => $salon->id,
             'estPioche' => true,
