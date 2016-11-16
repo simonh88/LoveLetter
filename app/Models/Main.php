@@ -17,7 +17,11 @@ class Main extends Model
       return $this->belongsToMany('App\Models\Cartes');
   }
 
-  public function ajouterCarte($idJoueur) {
-      // TODO ajouterCarte
+  public function ajouterCarte($idJoueur, $idCarte) {
+      Main::create([
+        'joueur_id' => $idJoueur,
+          'carte' => $idCarte
+      ]);
+
   }
 }
