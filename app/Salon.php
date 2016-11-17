@@ -20,6 +20,9 @@ class Salon extends Model
     public function  cartesDansPile(){
         return $this->hasMany('App\Models\CartesDansPile');
     }
+    public function actions(){
+        return $this->hasOne('App\Models\Action');
+    }
 
     /**
      * Fin du tour du jour courant et début du tour du prochain joueur
