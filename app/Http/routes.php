@@ -28,3 +28,5 @@ Route::get('testsession', function (\Illuminate\Http\Request $req) {
 });
 
 Route::get('play/{card}', 'JeuxController@play');
+
+Route::get('testdistribution/{n}', 'JeuxController@testdistrib');

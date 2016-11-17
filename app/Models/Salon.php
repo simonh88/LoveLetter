@@ -32,11 +32,6 @@ class Salon extends Model
             $this->id_prochain_joueur = $prochainJoueur->id;
         } else {
             $this->id_prochain_joueur = 0;
-            // TODO set aPioche à faux pour tous les joueurs
-            $joueurs = Joueur::where('salon_id', $this->id);
-            foreach ($joueurs as $joueur) {
-                $joueur->aPioche = false;
-            }
             $this->nextPlayer();
         }
 
@@ -64,11 +59,7 @@ class Salon extends Model
         $salon->nb_joueurs_presents += 1;
         $salon->save();
 
-        if ($salon->isFull()) {
-            $salon->nextPlayer();
-        }
-
-        return $salon->id;
+        return $salon;
     }
 
     /**
@@ -116,14 +107,33 @@ class Salon extends Model
         }
     }
 
-    public function distribuerCartes() {
-        $joueurs = Joueur::where('salon_id', $this->id)->toArray();
+    public function commencer() {
+        $this->distribuerCartes();
+        $this->nextPlayer();
+    }
 
-        $pioche = $pioche = PileCartes::where('salon_id', $this->id)->where('estPioche', true)->first();
+    public function distribuerCartes() {
+        $joueurs = $this->getJoueurs();
+        $pioche = $this->getPioche();
+
         foreach ($joueurs as $joueur){
-            $idCarte = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->first();
-            Main::ajouterCarte($joueur->id, $idCarte->carte_id);
-            CartesDansPile::destroy($idCarte->id);
+            $carte = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->firstOrFail();
+            Main::ajouterCarte($joueur->id, $carte->id);
+            CartesDansPile::destroy($carte->id);
+            CartesDansPile::where('pile_cartes_id', $pioche->id)->where('carte_id', $carte->id)->delete();
         }
+    }
+
+    public function getDefausse() {
+        return PileCartes::where('salon_id', $this->id)->where('estPioche', false)->firstOrFail();
+    }
+
+    public function getPioche() {
+        return PileCartes::where('salon_id', $this->id)->where('estPioche', true)->firstOrFail();
+    }
+
+    public function getJoueurs() {
+        var_dump(Joueur::where('salon_id', $this->id)->count());
+        return Joueur::where('salon_id', $this->id)->cursor();
     }
 }

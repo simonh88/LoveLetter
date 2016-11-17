@@ -40,16 +40,25 @@ class JeuxController extends Controller
 
         $res = array('myturn' => $turn);
         if ($turn) {
-                $res['card'] = $joueur->piocherCarte()->valeur;
+                $res['card'] = $joueur->piocherCarte()->id;
         }
 
         return json_encode($res);
     }
 
-    public function play(Request $req, $card) {
+    public function play(Request $req, $carte_id) {
         $username = $req->session()->get('username');
         $joueur = Joueur::where('username', $username)->firstOrFail();
-        $salon = Salon::where('id', $joueur->salon_id)->firstOrFail();
-        $salon->nextPlayer();
+        $salon = $joueur->getSalon();
+        if ($joueur->play($carte_id))
+        {
+            $salon->nextPlayer();
+        }
+    }
+
+    public function testdistrib(Request $req, $n) {
+        $salon = Salon::where('id', $n)->firstOrFail();
+        $salon->distribuerCartes();
+        return 'OK';
     }
 }

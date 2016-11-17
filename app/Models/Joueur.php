@@ -63,5 +63,27 @@ class Joueur extends Model
         return $carte;
     }
 
+    public function aPioche() {
+        $nbCartes = Mains::where('joueur_id', $this->id)->count();
+        return $nbCartes == 2;
+    }
+
+    public function play($carte_id) {
+        // TODO faire la table action
+        if (Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->count() == 0) {
+            // TODO message lui disant qu'il ne possède pas cette carte
+            return false;
+        }
+        // TODO Ajouter une action
+        Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->delete();
+        $salon = $this->getSalon();
+        $defausse = $salon->getDefausse();
+        CartesDansPile::create([
+           'carte_id' => $carte_id,
+            'pile_cartes_id' => $defausse->id,
+        ]);
+
+        return true;
+    }
 
 }

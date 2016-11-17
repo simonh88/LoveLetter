@@ -23,11 +23,13 @@ class AccueilController extends Controller
         $joueur = Joueur::creerJoueur($request->input('username'));
         $request->session()->set('username', $joueur->username);
 
-        $idSalon = Salon::chercherSalon();
-        $joueur->setSalon($idSalon);
+        $salon = Salon::chercherSalon();
+        $joueur->setSalon($salon->id);
+        if ($salon->isFull()) {
+            $salon->commencer();
+        }
 
-
-        return redirect("salons/".$idSalon);
+        return redirect("salons/".$salon->id);
     }
 
 
