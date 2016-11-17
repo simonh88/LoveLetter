@@ -133,7 +133,6 @@ class Salon extends Model
     }
 
     public function getJoueurs() {
-        var_dump(Joueur::where('salon_id', $this->id)->count());
         return Joueur::where('salon_id', $this->id)->cursor();
     }
 }

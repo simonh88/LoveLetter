@@ -64,7 +64,7 @@ class Joueur extends Model
     }
 
     public function aPioche() {
-        $nbCartes = Mains::where('joueur_id', $this->id)->count();
+        $nbCartes = Main::where('joueur_id', $this->id)->count();
         return $nbCartes == 2;
     }
 
