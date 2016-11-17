@@ -15,6 +15,12 @@ use App\Salon;
 
 class JeuxController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function myturn(Request $req) {
 
         $username = $req->session()->get('username');

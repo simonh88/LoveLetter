@@ -1,32 +1,9 @@
-@extends('template')
+@extends('layouts.app')
 
-@section('contenu')
-    <style>
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            display: table;
-            font-weight: 100;
-        }
-
-        .container {
-            text-align: center;
-            display: table-cell;
-            vertical-align: middle;
-        }
-
-        .content {
-            text-align: center;
-            display: inline-block;
-        }
-        </style>
+@section('content')
     <div class="container">
         <div class="content">
+            <h1>Bienvenue dans le super love letter mega bandant</h1>
             <form method="POST" action="{!! url('/') !!}" accept-charset="UTF-8">
                 {!! csrf_field() !!}
                 <label for="username">Entrez votre pseudo : </label>

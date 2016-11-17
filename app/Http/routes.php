@@ -12,7 +12,9 @@
 */
 
 
-Route::get('/', 'AccueilController@getInfos');
+Route::get('/', 'HomeController@index');
+
+Route::get('/jouer', 'AccueilController@getInfos');
 Route::post('/', 'AccueilController@postInfos');
 
 
@@ -30,3 +32,12 @@ Route::get('testsession', function (\Illuminate\Http\Request $req) {
 Route::get('play/{card}', 'JeuxController@play');
 
 Route::get('testdistribution/{n}', 'JeuxController@testdistrib');
+
+
+
+/**ROUTES PARTIE AUTHENTIFICATION**/
+
+//Voir Vendor/Bestmomo
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
