@@ -41,19 +41,33 @@ class JeuxController extends Controller
         // A la fin d'un tour, on set aPioché à faux pour tous les joueurs
         // ensuite on pourra supprimer ismyturn dans le script js
 
+        /**
+         * Dans res on met -> la main actuel du joueur
+         *                 -> les actions qu'il veut
+         *
+         * -> Mettre en place un myturn/{numAction}
+         */
+
         $res = array();
 
-        if ($joueur->checkTurn() && !$joueur->aPioche()) {
 
-            $carte = $joueur->piocherCarte();
+        if ($joueur->checkTurn()) {
+
+
+            if (!$joueur->aPioche()) {
+                $joueur->piocherCarte();
+            }
+
             $res['myturn'] = true;
-            $res['card'] = $carte->id;
 
         } else {
 
             $res['myturn'] = false;
 
         }
+
+        $res['main'] = $joueur->getMain();
+        $res['actions'] = $joueur->getSalon()->getActions();
 
         return json_encode($res);
     }
@@ -64,7 +78,7 @@ class JeuxController extends Controller
         $salon = $joueur->getSalon();
         if ($joueur->play($carte_id))
         {
-            $salon->nextPlayer();
+            $joueur->endTurn();
         }
     }
 

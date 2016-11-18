@@ -138,4 +138,8 @@ class Salon extends Model
     public function getJoueurs() {
         return Joueur::where('salon_id', $this->id)->cursor();
     }
+
+    public function getActions() {
+        return Action::where('salon_id', $this->id)->get()->toArray();
+    }
 }

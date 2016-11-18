@@ -69,12 +69,11 @@ class Joueur extends Model
     }
 
     public function play($carte_id) {
-        // TODO faire la table action
         if (Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->count() == 0) {
+            var_dump($carte_id);
             // TODO message lui disant qu'il ne possède pas cette carte
             return false;
         }
-        // TODO Ajouter une action
         Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->delete();
         $salon = $this->getSalon();
         $defausse = $salon->getDefausse();
@@ -83,7 +82,18 @@ class Joueur extends Model
             'pile_cartes_id' => $defausse->id,
         ]);
 
+        Action::joueurJoue($this, $carte_id);
         return true;
+    }
+
+    public function getMain() {
+        $cartes = array();
+        $cartesDansMain = Main::where('joueur_id', $this->id)->cursor();
+        foreach ($cartesDansMain as $carteDansMain) {
+            $carte = Cartes::where('id', $carteDansMain->carte_id)->firstOrFail();
+            array_push($cartes, $carte);
+        }
+        return $cartes;
     }
 
 }
