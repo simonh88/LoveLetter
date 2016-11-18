@@ -19,7 +19,7 @@ class CreateActionsTable extends Migration
             $table->string('type');
             $table->string('source');
             $table->string('message');
-            $table->integer('carte_id')->unsigned();
+            $table->integer('carte_id')->nullable()->unsigned();
         });
 
         Schema::table('actions', function (Blueprint $table) {

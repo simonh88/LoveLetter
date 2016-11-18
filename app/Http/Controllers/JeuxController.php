@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Action;
 use Illuminate\Http\Request;
 use App\Joueur;
 use App\Salon;
@@ -82,9 +83,10 @@ class JeuxController extends Controller
         }
     }
 
-    public function testdistrib(Request $req, $n) {
-        $salon = Salon::where('id', $n)->firstOrFail();
-        $salon->distribuerCartes();
-        return 'OK';
+    public function chat(Request $req, $msg) {
+        $username = $req->session()->get('username');
+        $joueur = Joueur::where('username', $username)->firstOrFail();
+        $salon = $joueur->getSalon();
+        Action::joueurChat($joueur, $msg);
     }
 }

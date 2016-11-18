@@ -15,6 +15,17 @@ function printMain() {
     })
 }
 
+/**
+ * Créé les boutons en fonction de cards[]
+ */
+function makeButtons() {
+    var choices_div = $('#choices');
+    choices_div.empty();
+    cards.forEach(function (card) {
+        choices_div.append('<button onclick="play('+ card['id'] +')">'+ card['nom'] +'</button>');
+    })
+}
+
 function printInfo(str) {
     var zoneAffichage = $('#zoneAffichage');
     zoneAffichage.val(zoneAffichage.val() + "\n" + str + "\n");
@@ -27,11 +38,14 @@ function printActions() {
         if (action['type'] == 'PLAY') {
             printInfo("[+] " + action['source'] + " a joué un " + action['message']);
         }
+
+        if ( action['type'] =='CHAT' ) {
+            printInfo("[---] " + action['source'] + " dit -> " + action['message']);
+        }
     }
 }
 
 function myturn() {
-    setTimeout(myturn, 1000);
     $.get('/myturn', function (data) {
         var res = $.parseJSON(data);
 
@@ -43,6 +57,9 @@ function myturn() {
         if (res['main']) {
             cards = res['main'];
         }
+
+        // Créer les boutons
+        makeButtons();
 
 
         // On check les actions
@@ -65,29 +82,30 @@ function myturn() {
 }
 
 // Nécessité de vérifier que le joueur possède bien la carte qu'il joue
-function play(card) {
-    if (!ismyturn) return;
-    var i = cards.indexOf(card);
-    if (i != -1) {
-        $.get('/play/' + card['id'], function (data) {
-            printInfo("Vous avez joué un " + card['nom'] + " ("  + card['id'] + ")");
-            ismyturn = false;
-        })
-    } else {
-        printInfo("Vous ne possedez pas cette carte");
+function play(card_id) {
+    if (!ismyturn) {
+        printInfo("[!] Ce n'est pas votre tour");
+        return;
     }
-}
 
-function playtest() {
-    var c = cards[0]
-    play(c)
+    $.get('/play/' + card_id, function () {
+        ismyturn = false;
+        myturn();
+    });
+
 }
 
 function chat() {
-    var message = $('#input').val();
+    var input_chat = $('#input_chat');
+    var message = input_chat.val();
+    input_chat.val('');
+    $.get('/chat/'+message, function (data) {
+        console.log(data);
+    });
 }
 
 function go () {
+    setInterval(myturn, 1000);
     myturn();
 }
 

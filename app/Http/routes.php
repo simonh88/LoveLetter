@@ -31,8 +31,7 @@ Route::get('testsession', function (\Illuminate\Http\Request $req) {
 
 Route::get('play/{card}', 'JeuxController@play');
 
-Route::get('testdistribution/{n}', 'JeuxController@testdistrib');
-
+Route::get('/chat/{msg}', 'JeuxController@chat');
 
 
 /**ROUTES PARTIE AUTHENTIFICATION**/
