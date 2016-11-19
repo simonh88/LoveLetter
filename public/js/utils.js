@@ -7,13 +7,7 @@ var cards = [];
 var actions = [];
 var numAction = 0;
 var ismyturn = false;
-
-function printMain() {
-    printInfo("Voici vos cartes : ");
-    cards.forEach(function (elem) {
-        printInfo(" - [ " + elem['id'] + " ] " + elem['nom']);
-    })
-}
+var username = '';
 
 /**
  * Créé les boutons en fonction de cards[]
@@ -36,11 +30,15 @@ function printActions() {
         // afficher actions[numAction]
         var action = actions[numAction];
         if (action['type'] == 'PLAY') {
-            printInfo("[+] " + action['source'] + " a joué un " + action['message']);
+            if (action['source'] == username) {
+                printInfo("[+] Vous avez joué un " + action['message']);
+            } else {
+                printInfo("[+] " + action['source'] + " a joué un " + action['message']);
+            }
         }
 
         if ( action['type'] =='CHAT' ) {
-            printInfo("[---] " + action['source'] + " dit -> " + action['message']);
+            printInfo("[-] " + action['source'] + " dit -> " + action['message']);
         }
     }
 }
@@ -49,9 +47,10 @@ function myturn() {
     $.get('/myturn', function (data) {
         var res = $.parseJSON(data);
 
-        console.log(res);
+        //console.log(res);
 
 
+        username = res['username'];
 
         // On set les cartes du joueur
         if (res['main']) {
@@ -74,7 +73,6 @@ function myturn() {
         if (res['myturn'] && !ismyturn) {
             ismyturn = true;
             printInfo("C'est votre tour!");
-            printMain();
         }
 
 

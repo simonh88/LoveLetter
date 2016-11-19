@@ -67,6 +67,7 @@ class JeuxController extends Controller
 
         }
 
+        $res['username'] = $joueur->username;
         $res['main'] = $joueur->getMain();
         $res['actions'] = $joueur->getSalon()->getActions();
 
