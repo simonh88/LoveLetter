@@ -108,6 +108,8 @@ class Joueur extends Model
     public function quitterSalon() {
         $salon = $this->getSalon();
         Action::messageServeur($salon, $this->username . " a quitté le salon");
+        // TODO delete la main
+        Main::where('joueur_id', $this->id)->delete();
         Joueur::where('id', $this->id)->delete();
         $salon->maj();
     }
