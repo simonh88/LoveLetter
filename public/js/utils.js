@@ -107,3 +107,16 @@ function go () {
     myturn();
 }
 
+function quit() {
+    $.get('/quit', function () {
+
+    });
+    window.location.href = "/";
+}
+
+function ready() {
+    $.get('/ready', function () {
+
+    });
+}
+

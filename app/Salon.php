@@ -29,7 +29,10 @@ class Salon extends Model
      */
     public function nextPlayer() {
         $id_prochain_joueur = $this->id_prochain_joueur;
-        $prochainJoueur = Joueur::where('salon_id', $this->id)->where('id', '>', $id_prochain_joueur)->first();
+        $prochainJoueur = Joueur::where('salon_id', $this->id)
+            ->where('id', '>', $id_prochain_joueur)
+            ->where('est_elimine', false)
+            ->first();
 
         if ($prochainJoueur) {
             $this->id_prochain_joueur = $prochainJoueur->id;
@@ -111,6 +114,9 @@ class Salon extends Model
     }
 
     public function commencer() {
+        Action::messageServeur($this, "La partie commence");
+        $this->is_playing = true;
+        $this->save();
         $this->distribuerCartes();
         $this->nextPlayer();
     }
@@ -141,5 +147,20 @@ class Salon extends Model
 
     public function getActions() {
         return Action::where('salon_id', $this->id)->get()->toArray();
+    }
+
+    public function maj() {
+        $this->nb_joueurs_presents = Joueur::where('salon_id', $this->id)->count();
+        $this->save();
+    }
+
+    public function auMoinsDeuxJoueurs() {
+        return Joueur::where('salon_id', $this->id)->count() >= 2;
+    }
+
+    public function toutLeMondeEstPret() {
+        $nbJoueurs = Joueur::where('salon_id', $this->id)->count();
+        $nbJoueursPresents = Joueur::where('salon_id', $this->id)->where('is_ready', true)->count();
+        return $nbJoueurs == $nbJoueursPresents;
     }
 }

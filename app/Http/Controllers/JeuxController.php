@@ -90,4 +90,18 @@ class JeuxController extends Controller
         $salon = $joueur->getSalon();
         Action::joueurChat($joueur, $msg);
     }
+
+    public function quit(Request $req) {
+        $username = $req->session()->get('username');
+        $joueur = Joueur::getJoueurByUsername($username);
+        $joueur->quitterSalon();
+        return redirect("/");
+    }
+
+    public function ready(Request $req) {
+        $username = $req->session()->get('username');
+        $joueur = Joueur::getJoueurByUsername($username);
+        Action::messageServeur($joueur->getSalon(), $username . " est prêt");
+        $joueur->ready();
+    }
 }

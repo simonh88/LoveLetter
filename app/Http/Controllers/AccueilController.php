@@ -33,9 +33,6 @@ class AccueilController extends Controller
         $salon = Salon::chercherSalon();
         Action::messageServeur($salon, "Bienvenue à " . $joueur->username);
         $joueur->setSalon($salon->id);
-        if ($salon->isFull()) {
-            $salon->commencer();
-        }
 
         return redirect("salons/".$salon->id);
     }

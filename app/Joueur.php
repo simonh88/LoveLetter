@@ -10,12 +10,17 @@ class Joueur extends Model
     protected $table = 'joueurs';
     protected $primaryKey = 'id';//Par défaut, pas besoin de le spécifier là
 
-    protected $fillable = ['username', 'salon_id'];
+    protected $fillable = ['username', 'salon_id', 'est_protege', 'est_elimine', 'is_ready'];
 
     public $timestamps = false;
 
     public static function creerJoueur($username) {
-        $joueur = Joueur::firstOrNew(['username' => $username]);
+        $joueur = Joueur::firstOrNew([
+            'username' => $username,
+            'est_protege' => false,
+            'est_elimine' => false,
+            'is_ready' => false,
+        ]);
         return $joueur;
     }
 
@@ -94,6 +99,26 @@ class Joueur extends Model
             array_push($cartes, $carte);
         }
         return $cartes;
+    }
+
+    public static function getJoueurByUsername($username) {
+        return Joueur::where('username', $username)->firstOrFail();
+    }
+
+    public function quitterSalon() {
+        $salon = $this->getSalon();
+        Action::messageServeur($salon, $this->username . " a quitté le salon");
+        Joueur::where('id', $this->id)->delete();
+        $salon->maj();
+    }
+
+    public function ready() {
+        $this->is_ready = true;
+        $this->save();
+        $salon = $this->getSalon();
+        if ($salon->auMoinsDeuxJoueurs() && $salon->toutLeMondeEstPret()) {
+            $salon->commencer();
+        }
     }
 
 }
