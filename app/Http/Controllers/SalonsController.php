@@ -18,7 +18,6 @@ class SalonsController extends Controller{
     }
 
     public function show(Request $req, $n){
-        // TODO le joueur rejoint le salon
         $joueur = Joueur::getJoueurByUsername($req->session()->get('username'));
 
         if ($joueur->dansAucunSalon() ) {
