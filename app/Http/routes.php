@@ -31,6 +31,8 @@ Route::get('testsession', function (\Illuminate\Http\Request $req) {
 });
 
 Route::get('play/{card}', 'JeuxController@play');
+Route::get('play/{card}/{joueur_cible}', 'JeuxController@play');
+Route::get('play/{card}/{joueur_cible}/{carte_devine}', 'JeuxController@play');
 
 Route::get('chat/{msg}', 'JeuxController@chat');
 

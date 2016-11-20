@@ -168,4 +168,8 @@ class Salon extends Model
         $nbJoueursPresents = Joueur::where('salon_id', $this->id)->where('is_ready', true)->count();
         return $nbJoueurs == $nbJoueursPresents;
     }
+
+    public function other_players(Joueur $joueur) {
+        return Joueur::where('salon_id', $this->id)->where('id', '!=', $joueur->id)->get()->toArray();
+    }
 }

@@ -26,6 +26,7 @@ class JeuxController extends Controller
 
         $username = $req->session()->get('username');
         $joueur = Joueur::where('username', $username)->firstOrFail();
+        $salon = $joueur->getSalon();
 
         $res = array();
 
@@ -48,11 +49,13 @@ class JeuxController extends Controller
         $res['username'] = $joueur->username;
         $res['main'] = $joueur->getMain();
         $res['actions'] = $joueur->getSalon()->getActions();
+        $res['other_players'] = $salon->other_players($joueur);
 
         return json_encode($res);
     }
 
-    public function play(Request $req, $carte_id) {
+    public function play(Request $req, $carte_id, $joueur_cible, $carte_devine) {
+        // TODO normalement on a toutes les infos pour effectuer les actions en fonction de la carte...
         $username = $req->session()->get('username');
         $joueur = Joueur::where('username', $username)->firstOrFail();
         $salon = $joueur->getSalon();
