@@ -30,11 +30,8 @@ class AccueilController extends Controller
 
         $joueur = Joueur::creerJoueur($request->input('username'));
         $request->session()->set('username', $joueur->username);
-        $salon = Salon::chercherSalon();
-        Action::messageServeur($salon, "Bienvenue à " . $joueur->username);
-        $joueur->setSalon($salon->id);
 
-        return redirect("salons/".$salon->id);
+        return redirect("salons");
     }
 
 

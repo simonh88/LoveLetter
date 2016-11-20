@@ -1,6 +1,7 @@
 @extends('template')
 @section('contenu')
 
+    <h1>Salon {{ $idSalon }}</h1>
     <textarea readonly id="zoneAffichage" cols="60" rows="20"></textarea><br>
     <div id="choices"></div>
     <input type="text" id="input_chat">

@@ -151,6 +151,11 @@ class Salon extends Model
 
     public function maj() {
         $this->nb_joueurs_presents = Joueur::where('salon_id', $this->id)->count();
+        if ($this->nb_joueurs_presents == 0) {
+            $this->is_playing = false;
+            $this->id_prochain_joueur = 0;
+            Action::where('salon_id', $this->id)->delete();
+        }
         $this->save();
     }
 

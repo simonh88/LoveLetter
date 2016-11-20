@@ -17,10 +17,12 @@ class Joueur extends Model
     public static function creerJoueur($username) {
         $joueur = Joueur::firstOrNew([
             'username' => $username,
+            'salon_id' => null,
             'est_protege' => false,
             'est_elimine' => false,
             'is_ready' => false,
         ]);
+        $joueur->save();
         return $joueur;
     }
 
@@ -44,7 +46,9 @@ class Joueur extends Model
 
     public function setSalon($idSalon) {
         $this->salon_id = $idSalon;
-        $this->is_ready = 1;
+        $salon = $this->getSalon();
+        $salon->nb_joueurs_presents ++;
+        $salon->save();
         $this->save();
     }
 
@@ -108,7 +112,6 @@ class Joueur extends Model
     public function quitterSalon() {
         $salon = $this->getSalon();
         Action::messageServeur($salon, $this->username . " a quitté le salon");
-        // TODO delete la main
         Main::where('joueur_id', $this->id)->delete();
         Joueur::where('id', $this->id)->delete();
         $salon->maj();
@@ -121,6 +124,10 @@ class Joueur extends Model
         if ($salon->auMoinsDeuxJoueurs() && $salon->toutLeMondeEstPret()) {
             $salon->commencer();
         }
+    }
+
+    public function dansAucunSalon() {
+        return $this->salon_id == null;
     }
 
 }

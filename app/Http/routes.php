@@ -19,6 +19,7 @@ Route::post('/', 'AccueilController@postInfos');
 
 
 Route::get('salons/{n}', 'SalonsController@show');
+Route::get('salons', 'SalonsController@showAll');
 
 Route::get('myturn', 'JeuxController@myturn');
 
@@ -36,6 +37,7 @@ Route::get('chat/{msg}', 'JeuxController@chat');
 Route::get('quit', 'JeuxController@quit');
 
 Route::get('ready', 'JeuxController@ready');
+Route::get('join', 'JeuxController@join');
 
 
 /**ROUTES PARTIE AUTHENTIFICATION**/

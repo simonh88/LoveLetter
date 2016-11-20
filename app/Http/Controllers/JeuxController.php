@@ -104,4 +104,5 @@ class JeuxController extends Controller
         Action::messageServeur($joueur->getSalon(), $username . " est prêt");
         $joueur->ready();
     }
+
 }
