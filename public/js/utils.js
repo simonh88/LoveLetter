@@ -15,9 +15,12 @@ var username = '';
  */
 function makeButtons() {
     var choices_div = $('#choices');
+    var card_img;
     choices_div.empty();
     cards.forEach(function (card) {
-        choices_div.append('<button onclick="play('+ card['id'] +')">'+ card['nom'] +'</button>');
+
+        //choices_div.append('<img src="/img/baron.jpg" alt="coucou">');
+        choices_div.append('<button onclick="play('+ card['id'] +')"><img src="'+ card['image'] + '" alt="'+ card['nom'] +'"></button>');
     })
 }
 
