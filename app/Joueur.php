@@ -153,6 +153,10 @@ class Joueur extends Model
     }
 
     public static function getJoueurByUsername($username) {
+
+        if(empty(Joueur::where('username', $username)->first())){
+            self::creerJoueur($username);
+        }
         return Joueur::where('username', $username)->firstOrFail();
     }
 

@@ -14,10 +14,10 @@
 
 Route::get('/', 'HomeController@index');
 
-Route::get('/jouer', 'AccueilController@getInfos');
-Route::post('/', 'AccueilController@postInfos');
+//Route::get('/jouer', 'AccueilController@getInfos');
+//Route::post('/', 'AccueilController@postInfos');
 
-//Route::get('/jouer', 'SalonsController@showAll');
+Route::get('/jouer', 'SalonsController@showAll');
 
 
 Route::get('salons/{n}', 'SalonsController@show');

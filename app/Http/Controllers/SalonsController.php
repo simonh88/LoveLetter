@@ -19,7 +19,7 @@ class SalonsController extends Controller{
     }
 
     public function show(Request $req, $n){
-        $joueur = Joueur::getJoueurByUsername($req->session()->get('username'));
+        $joueur = Joueur::getJoueurByUsername($req->session()->get("username"));
 
         if ($joueur->dansAucunSalon() ) {
             $joueur->setSalon($n);
