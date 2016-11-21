@@ -127,9 +127,10 @@ class Salon extends Model
 
         foreach ($joueurs as $joueur){
             $carte = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->firstOrFail();
-            Main::ajouterCarte($joueur->id, $carte->id);
-            CartesDansPile::destroy($carte->id);
-            CartesDansPile::where('pile_cartes_id', $pioche->id)->where('carte_id', $carte->id)->delete();
+            var_dump($carte);
+            Main::ajouterCarte($joueur->id, $carte->carte_id);
+            //CartesDansPile::destroy($carte->id);
+            //CartesDansPile::where('pile_cartes_id', $pioche->id)->where('carte_id', $carte->id)->delete();
         }
     }
 
@@ -157,6 +158,12 @@ class Salon extends Model
             Action::messageServeur($this, "Fin de la partie, veuillez quitter le salon");
         } else if ($this->nb_joueurs_presents == 0) {
             Action::where('salon_id', $this->id)->delete();
+            $pioche = $this->getPioche();
+            $defausse = $this->getDefausse();
+            CartesDansPile::where('pile_cartes_id', $pioche->id)->delete();
+            CartesDansPile::where('pile_cartes_id', $defausse->id)->delete();
+            self::init_pioche($pioche);
+
         }
         $this->save();
     }
