@@ -1,15 +1,23 @@
-@extends('template')
-@section('contenu')
+@extends('layouts.app')
 
-    <h1>Liste des salons</h1>
-    <ul>
+@section('content')
+    <div class="container">
+        <div class="page-header">
+            <h1>Liste des salons</h1>
+        </div>
+
+        <ul class="list-group  col-md-4">
             @foreach($salons as $salon)
-                <li><a href="salons/{{ $salon["id"] }}">Salon n° {{ $salon["id"]  }} </a>-- {{ $salon["nb_joueurs_presents"] }} / {{ $salon["nb_joueurs_max"] }}</li>
+                <li class="list-group-item">
+                    <a href="salons/{{ $salon["id"] }}">Salon n° {{ $salon["id"]  }} </a>
+                    <span class="badge float-xs-right">{{ $salon["nb_joueurs_presents"] }} / {{ $salon["nb_joueurs_max"] }} </span>
+                </li>
             @endforeach
-    </ul>
-    <form method="get" action="/clearAllSalons">
-        <button type="submit">Clear</button>
-    </form>
-
+        </ul>
+        <br/>
+        <form method="get" action="/clearAllSalons">
+            <button class="btn btn-danger" type="submit">Clear</button>
+        </form>
+    </div>
 
 @endsection
