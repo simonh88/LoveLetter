@@ -17,6 +17,8 @@ Route::get('/', 'HomeController@index');
 Route::get('/jouer', 'AccueilController@getInfos');
 Route::post('/', 'AccueilController@postInfos');
 
+//Route::get('/jouer', 'SalonsController@showAll');
+
 
 Route::get('salons/{n}', 'SalonsController@show');
 Route::get('salons', 'SalonsController@showAll');
@@ -31,8 +33,8 @@ Route::get('testsession', function (\Illuminate\Http\Request $req) {
 });
 
 Route::get('play/{card}', 'JeuxController@play');
-Route::get('play/{card}/{joueur_cible}', 'JeuxController@play');
-Route::get('play/{card}/{joueur_cible}/{carte_devine}', 'JeuxController@play');
+Route::get('play/{card}/{joueur_cible}', 'JeuxController@playCible');
+Route::get('play/{card}/{joueur_cible}/{carte_devine}', 'JeuxController@playCibleCarte');
 
 Route::get('chat/{msg}', 'JeuxController@chat');
 

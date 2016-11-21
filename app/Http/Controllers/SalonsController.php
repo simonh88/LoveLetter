@@ -8,6 +8,7 @@ use App\Action;
 use Illuminate\Http\Request;
 use App\Joueur;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Session;
 
 
 class SalonsController extends Controller{

@@ -78,6 +78,10 @@ class Joueur extends Model
     }
 
     public function play($carte_id) {
+        //On reset a chaque début de tour est_protege à false
+        $this->est_protege = false;
+        $this->save();
+
         if (Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->count() == 0) {
             var_dump($carte_id);
             // TODO message lui disant qu'il ne possède pas cette carte
@@ -91,15 +95,30 @@ class Joueur extends Model
             'pile_cartes_id' => $defausse->id,
         ]);
 
+        $this->handmaidJoue($carte_id);//Test s'il joue un handmaid ou non
+
         Action::joueurJoue($this, $carte_id);
 
-        // TODO Si le joueur joue un handmaid, il est protégé
+        // TODO Si le joueur joue un handmaid, il est protégé => Function handmaidJoue
 
-        // TODO Ne pas oublié d'enlever sa protection au prochain tour
+        // TODO Ne pas oublié d'enlever sa protection au prochain tour => dans cette fct tout au début
 
         // TODO Si il joue un priest, il doit pouvoir choisir un joueur et voir sa main
 
         return true;
+    }
+
+    /**
+     * Fonction checkant si le joueur joue un handmaid
+     * et lui met une protectection si oui
+     */
+    function handmaidJoue($carte_id){
+        // TODO A VERIFIER mais normalement c'est bon
+        $carte = Cartes::where('id', $carte_id)->firstOrFail();
+        if($carte->nom == 'Handmaid'){
+            $this->est_protege = true;
+            $this->save();
+        }
     }
 
     public function getMain() {
@@ -123,7 +142,7 @@ class Joueur extends Model
         $princeOrKing = false;
         $idADetruire = -1;
         foreach($cartesDansMain  as $carteDansMain) {
-            $carte = Cartes::where('id', $cartesDansMain->carte_id)->firstOrFail();
+            $carte = Cartes::where('id', $carteDansMain->carte_id)->firstOrFail();
             if($carte->nom == 'Countess'){
                 $countess = true;
                 $idADetruire = $carteDansMain->id;

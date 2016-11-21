@@ -54,13 +54,33 @@ class JeuxController extends Controller
         return json_encode($res);
     }
 
-    public function play(Request $req, $carte_id, $joueur_cible, $carte_devine) {
-        // TODO normalement on a toutes les infos pour effectuer les actions en fonction de la carte...
+    public function play(Request $req, $carte_id) {
         $username = $req->session()->get('username');
         $joueur = Joueur::where('username', $username)->firstOrFail();
         $salon = $joueur->getSalon();
         if ($joueur->play($carte_id))
         {
+            $joueur->endTurn();
+        }
+    }
+
+    public function playCible(Request $req, $carte_id, $joueur_cible){
+        //TODO action sur la cible mais sans carte a deviner
+        $username = $req->session()->get('username');
+        $joueur = Joueur::where('username', $username)->firstOrFail();
+        $salon = $joueur->getSalon();
+        if ($joueur->play($carte_id)) {
+            $joueur->endTurn();
+        }
+
+    }
+
+    public function playCibleCarte(Request $req, $carte_id, $joueur_cible, $carte_devine){
+        //TODO action sur la cible + devine sa carte
+        $username = $req->session()->get('username');
+        $joueur = Joueur::where('username', $username)->firstOrFail();
+        $salon = $joueur->getSalon();
+        if ($joueur->play($carte_id)) {
             $joueur->endTurn();
         }
     }

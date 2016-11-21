@@ -3,7 +3,8 @@
 @section('content')
     <div class="container">
         <div class="content">
-            <h1>Bienvenue dans le super love letter mega bandant</h1>
+            <h1>Bienvenue dans le super love letter</h1>
+            <?php var_dump(); ?>
             <form method="POST" action="{!! url('/') !!}" accept-charset="UTF-8">
                 {!! csrf_field() !!}
                 <label for="username">Entrez votre pseudo : </label>
