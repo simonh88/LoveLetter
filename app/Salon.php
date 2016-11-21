@@ -129,8 +129,8 @@ class Salon extends Model
             $carte = CartesDansPile::where('pile_cartes_id', $pioche->id)->inRandomOrder()->firstOrFail();
             var_dump($carte);
             Main::ajouterCarte($joueur->id, $carte->carte_id);
-            //CartesDansPile::destroy($carte->id);
-            //CartesDansPile::where('pile_cartes_id', $pioche->id)->where('carte_id', $carte->id)->delete();
+            CartesDansPile::destroy($carte->id);
+            CartesDansPile::where('pile_cartes_id', $pioche->id)->where('carte_id', $carte->id)->delete();
         }
     }
 
