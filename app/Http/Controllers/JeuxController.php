@@ -95,8 +95,11 @@ class JeuxController extends Controller
     public function ready() {
         $username = Auth::user()->name;
         $joueur = Joueur::getJoueurByUsername();
-        Action::messageServeur($joueur->getSalon(), $username . " est prêt");
-        $joueur->ready();
+        if (!$joueur->isReady())
+        {
+            Action::messageServeur($joueur->getSalon(), $username . " est prêt");
+            $joueur->ready();
+        }
     }
 
     public function clearAllSalons() {

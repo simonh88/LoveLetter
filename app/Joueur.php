@@ -199,4 +199,8 @@ class Joueur extends Model
         }
     }
 
+    public function isReady() {
+        return $this->is_ready;
+    }
+
 }
