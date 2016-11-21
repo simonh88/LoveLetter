@@ -4,7 +4,7 @@
     <div class="container">
 
 
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="page-header">
                 <h1>Salon {{ $idSalon }}</h1>
             </div>
@@ -25,7 +25,7 @@
 
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="page-header">
                 <h1>Défausse</h1>
             </div>
@@ -39,10 +39,25 @@
             </table>
         </div>
 
+        <div class="col-md-2">
+            <div class="page-header">
+                <h1>Status</h1>
+            </div>
+
+            <table class="table table-bordered">
+                <tr><th>Joueur</th><th>Eliminé</th><th>Protégé</th></tr>
+                <tr><th>Tarlouz</th><td></td><td></td></tr>
+                <tr><th>Bitch</th><td></td><td>X</td></tr>
+                <tr><th>Jean</th><td></td><td></td></tr>
+            </table>
+        </div>
+
 
     </div>
 
 
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="{{ URL::asset('js/utils.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             go();
