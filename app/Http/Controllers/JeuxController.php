@@ -107,4 +107,12 @@ class JeuxController extends Controller
         $joueur->ready();
     }
 
+    public function clearAllSalons() {
+        $salons = Salon::all();
+        foreach ($salons as $salon) {
+            $salon->reset();
+        }
+        return redirect('/jouer');
+    }
+
 }

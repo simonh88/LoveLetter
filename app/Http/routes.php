@@ -41,7 +41,7 @@ Route::get('chat/{msg}', 'JeuxController@chat');
 Route::get('quit', 'JeuxController@quit');
 
 Route::get('ready', 'JeuxController@ready');
-Route::get('join', 'JeuxController@join');
+Route::get('clearAllSalons', 'JeuxController@clearAllSalons');
 
 
 /**ROUTES PARTIE AUTHENTIFICATION**/

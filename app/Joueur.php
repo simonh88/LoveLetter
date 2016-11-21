@@ -183,4 +183,9 @@ class Joueur extends Model
         return $this->salon_id == null;
     }
 
+    public function delete() {
+        Main::where('joueur_id', $this->id)->delete();
+        Joueur::where('id', $this->id)->delete();
+    }
+
 }

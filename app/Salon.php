@@ -172,4 +172,12 @@ class Salon extends Model
     public function other_players(Joueur $joueur) {
         return Joueur::where('salon_id', $this->id)->where('id', '!=', $joueur->id)->get()->toArray();
     }
+
+    public function reset() {
+        $joueurs = Joueur::where('salon_id', $this->id)->cursor();
+        foreach ($joueurs as $joueur) {
+            $joueur->delete();
+        }
+        $this->maj();
+    }
 }

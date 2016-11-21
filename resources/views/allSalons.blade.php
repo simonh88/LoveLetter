@@ -7,6 +7,9 @@
                 <li><a href="salons/{{ $salon["id"] }}">Salon n° {{ $salon["id"]  }} </a>-- {{ $salon["nb_joueurs_presents"] }} / {{ $salon["nb_joueurs_max"] }}</li>
             @endforeach
     </ul>
+    <form method="get" action="/clearAllSalons">
+        <button type="submit">Clear</button>
+    </form>
 
 
 @endsection
