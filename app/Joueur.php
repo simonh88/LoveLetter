@@ -154,7 +154,7 @@ class Joueur extends Model
         ]);
     }
 
-    public static function getJoueurByUsername($username) {
+    public static function getJoueurByUsername() {
         $username = Auth::user()->name;
         if(empty(Joueur::where('username', $username)->first())){
             self::creerJoueur($username);
@@ -188,13 +188,14 @@ class Joueur extends Model
         Joueur::where('id', $this->id)->delete();
     }
 
-    public function elemine(){
-        $this->est_elimine = true;
-        $this->save();
+    public static function elimine(){
+        $joueur = self::getJoueurByUsername();
+        $joueur->est_elimine = true;
+        $joueur->save();
         //On delete toute ses cartes
-        $cartesDansMain = Main::where('joueur_id', $this->id)->cursor();
+        $cartesDansMain = Main::where('joueur_id', $joueur->id)->cursor();
         foreach ($cartesDansMain as $carte){
-            $this->deleteCard($carte->id);
+            $joueur->deleteCard($carte->id);
         }
     }
 

@@ -27,7 +27,7 @@ class JeuxController extends Controller
     public function myturn() {
 
         $username = Auth::user()->name;
-        $joueur = Joueur::getJoueurByUsername($username);
+        $joueur = Joueur::getJoueurByUsername();
         $salon = $joueur->getSalon();
 
         $res = array();
@@ -87,14 +87,14 @@ class JeuxController extends Controller
 
     public function quit() {
         $username = Auth::user()->name;
-        $joueur = Joueur::getJoueurByUsername($username);
+        $joueur = Joueur::getJoueurByUsername();
         $joueur->quitterSalon();
         return redirect("/");
     }
 
     public function ready() {
         $username = Auth::user()->name;
-        $joueur = Joueur::getJoueurByUsername($username);
+        $joueur = Joueur::getJoueurByUsername();
         Action::messageServeur($joueur->getSalon(), $username . " est prêt");
         $joueur->ready();
     }
