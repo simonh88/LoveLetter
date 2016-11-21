@@ -94,6 +94,7 @@ class Joueur extends Model
         Action::joueurJoue($this, $carte_id);
 
         // TODO Si le joueur joue un handmaid, il est protégé
+
         // TODO Ne pas oublié d'enlever sa protection au prochain tour
 
         // TODO Si il joue un priest, il doit pouvoir choisir un joueur et voir sa main
@@ -116,7 +117,20 @@ class Joueur extends Model
     }
 
     private function checkCountessPrinceKing() {
-        // TODO cette fonction
+        // TODO A VERIFIER
+        $cartesDansMain = Main::where('joueur_id', $this->id)->cursor();
+        $countess = false;
+        $princeOrKing = false;
+        $idADetruire = -1;
+        foreach($cartesDansMain  as $carteDansMain) {
+            $carte = Cartes::where('id', $cartesDansMain->carte_id)->firstOrFail();
+            if($carte->nom == 'Countess'){
+                $countess = true;
+                $idADetruire = $carteDansMain->id;
+            } else if($carte->nom == 'King') $princeOrKing = true;
+            else if($carte->nom == 'Prince') $princeOrKing = true;
+        }
+        if( $countess && $princeOrKing) Main::where('id', $idADetruire)->delete();
     }
 
     public static function getJoueurByUsername($username) {
