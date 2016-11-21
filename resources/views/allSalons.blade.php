@@ -14,8 +14,8 @@
                 </li>
             @endforeach
         </ul>
-        <br/>
-        <form method="get" action="/clearAllSalons">
+
+        <form class="col-md-12" method="get" action="/clearAllSalons">
             <button class="btn btn-danger" type="submit">Clear</button>
         </form>
     </div>
