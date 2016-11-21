@@ -4,6 +4,8 @@ namespace App;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class Joueur extends Model
 {
@@ -153,7 +155,7 @@ class Joueur extends Model
     }
 
     public static function getJoueurByUsername($username) {
-
+        $username = Auth::user()->name;
         if(empty(Joueur::where('username', $username)->first())){
             self::creerJoueur($username);
         }
