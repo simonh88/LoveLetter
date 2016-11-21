@@ -17,7 +17,7 @@ function makeButtons() {
     var choices_div = $('#choices');
     choices_div.empty();
     cards.forEach(function (card) {
-        choices_div.append('<button onclick="play(' + card['id'] + ')"><img width="300px" height="419px" src="'+ card['image'] + '" alt="'+ card['nom'] +'"></button>');
+        choices_div.append('<button onclick="play(' + card['id'] + ')"><img style="display: inline-block;"  class="img-responsive img-rounded" width="220px" src="'+ card['image'] + '" alt="'+ card['nom'] +'"></button> ');
     })
 }
 
@@ -55,7 +55,7 @@ function myturn() {
         username = res['username'];
 
         // On set les cartes du joueur
-        if (res['main']) {
+        if (res['main'] && !ismyturn) {
             cards = res['main'];
         }
 
@@ -131,7 +131,6 @@ function play(card_id) {
 
     $.get(url, function () {
         ismyturn = false;
-        myturn();
     });
 
 }
