@@ -17,7 +17,7 @@ function makeButtons() {
     var choices_div = $('#choices');
     choices_div.empty();
     cards.forEach(function (card) {
-        choices_div.append('<button onclick="play('+ card['id'] +')"><img src="'+ card['image'] + '" alt="'+ card['nom'] +'"></button>');
+        choices_div.append('<button onclick="play(' + card['id'] + ')"><img src="'+ card['image'] + '" alt="'+ card['nom'] +'"></button>');
     })
 }
 

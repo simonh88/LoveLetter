@@ -23,10 +23,10 @@ class JeuxController extends Controller
         $this->middleware('auth');
     }
 
-    public function myturn(Request $req) {
+    public function myturn() {
 
         $username = Auth::user()->name;
-        $joueur = Joueur::where('username', $username)->firstOrFail();
+        $joueur = Joueur::getJoueurByUsername($username);
         $salon = $joueur->getSalon();
 
         $res = array();
@@ -55,17 +55,17 @@ class JeuxController extends Controller
         return json_encode($res);
     }
 
-    public function play(Request $req, $carte_id) {
+    public function play($carte_id) {
         $username = Auth::user()->name;
         $joueur = Joueur::where('username', $username)->firstOrFail();
-        $salon = $joueur->getSalon();
-        if ($joueur->play($carte_id))
+        if ($joueur->possedeCarte($carte_id))
         {
+            $joueur->play($carte_id);
             $joueur->endTurn();
         }
     }
 
-    public function playCible(Request $req, $carte_id, $joueur_cible){
+    public function playCible($carte_id, $joueur_cible){
         //TODO action sur la cible mais sans carte a deviner
         $username = Auth::user()->name;
         $joueur = Joueur::where('username', $username)->firstOrFail();
@@ -76,31 +76,29 @@ class JeuxController extends Controller
 
     }
 
-    public function playCibleCarte(Request $req, $carte_id, $joueur_cible, $carte_devine){
+    public function playCibleCarte($carte_id, $joueur_cible, $carte_devine){
         //TODO action sur la cible + devine sa carte
         $username = Auth::user()->name;
         $joueur = Joueur::where('username', $username)->firstOrFail();
-        $salon = $joueur->getSalon();
         if ($joueur->play($carte_id)) {
             $joueur->endTurn();
         }
     }
 
-    public function chat(Request $req, $msg) {
+    public function chat($msg) {
         $username = Auth::user()->name;
         $joueur = Joueur::where('username', $username)->firstOrFail();
-        $salon = $joueur->getSalon();
         Action::joueurChat($joueur, $msg);
     }
 
-    public function quit(Request $req) {
+    public function quit() {
         $username = Auth::user()->name;
         $joueur = Joueur::getJoueurByUsername($username);
         $joueur->quitterSalon();
         return redirect("/");
     }
 
-    public function ready(Request $req) {
+    public function ready() {
         $username = Auth::user()->name;
         $joueur = Joueur::getJoueurByUsername($username);
         Action::messageServeur($joueur->getSalon(), $username . " est prêt");

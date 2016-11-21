@@ -153,6 +153,7 @@ class Joueur extends Model
             } else if($carte->nom == 'King') $princeOrKing = true;
             else if($carte->nom == 'Prince') $princeOrKing = true;
         }
+        // TODO mettre la carte dans la défausse
         if( $countess && $princeOrKing) Main::where('id', $idADetruire)->delete();
     }
 
