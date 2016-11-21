@@ -79,16 +79,18 @@ class Joueur extends Model
         return $nbCartes == 2;
     }
 
+    public function possedeCarte($carte_id){
+        if (Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->count() == 0) {
+            return false;
+        }
+        return true;
+    }
+
     public function play($carte_id) {
         //On reset a chaque début de tour est_protege à false
         $this->est_protege = false;
         $this->save();
 
-        if (Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->count() == 0) {
-            var_dump($carte_id);
-            // TODO message lui disant qu'il ne possède pas cette carte
-            return false;
-        }
         Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->delete();
         $salon = $this->getSalon();
         $defausse = $salon->getDefausse();
@@ -114,7 +116,7 @@ class Joueur extends Model
      * Fonction checkant si le joueur joue un handmaid
      * et lui met une protectection si oui
      */
-    function handmaidJoue($carte_id){
+    private function handmaidJoue($carte_id){
         // TODO A VERIFIER mais normalement c'est bon
         $carte = Cartes::where('id', $carte_id)->firstOrFail();
         if($carte->nom == 'Handmaid'){
