@@ -99,9 +99,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Salon::creationSalon(2);
-        \App\Salon::creationSalon(3);
-        \App\Salon::creationSalon(4);
-        \App\Salon::creationSalon(4);
+        //\App\Salon::creationSalon(3);
+        //\App\Salon::creationSalon(4);
+        //\App\Salon::creationSalon(4);
 
     }
 }

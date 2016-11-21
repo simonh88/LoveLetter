@@ -91,21 +91,9 @@ class Joueur extends Model
         $this->est_protege = false;
         $this->save();
 
-        Main::where('carte_id', $carte_id)->where('joueur_id', $this->id)->delete();
-        $salon = $this->getSalon();
-        $defausse = $salon->getDefausse();
-        CartesDansPile::create([
-           'carte_id' => $carte_id,
-            'pile_cartes_id' => $defausse->id,
-        ]);
-
-        $this->handmaidJoue($carte_id);//Test s'il joue un handmaid ou non
+        $this->deleteCard($carte_id);
 
         Action::joueurJoue($this, $carte_id);
-
-        // TODO Si le joueur joue un handmaid, il est protégé => Function handmaidJoue
-
-        // TODO Ne pas oublié d'enlever sa protection au prochain tour => dans cette fct tout au début
 
         // TODO Si il joue un priest, il doit pouvoir choisir un joueur et voir sa main
 
@@ -116,13 +104,12 @@ class Joueur extends Model
      * Fonction checkant si le joueur joue un handmaid
      * et lui met une protectection si oui
      */
-    private function handmaidJoue($carte_id){
-        // TODO A VERIFIER mais normalement c'est bon
-        $carte = Cartes::where('id', $carte_id)->firstOrFail();
-        if($carte->nom == 'Handmaid'){
-            $this->est_protege = true;
-            $this->save();
-        }
+    public static function handmaidJoue(){
+        $joueur = Joueur::getJoueurByUsername(Auth::user()->name);
+        $msg = $joueur->username . " est immunisé pendant un tour";
+        Action::messageServeur($joueur->getSalon(), $msg);
+        $joueur->est_protege = true;
+        $joueur->save();
     }
 
     public function getMain() {
@@ -134,27 +121,37 @@ class Joueur extends Model
         }
 
         // Si le joueur a une countess + prince ou king, il défausse la countess
-        $this->checkCountessPrinceKing();
+        //$this->checkCountessPrinceKing();
 
         return $cartes;
     }
 
-    private function checkCountessPrinceKing() {
-        // TODO A VERIFIER
+    /*private function checkCountessPrinceKing() {
         $cartesDansMain = Main::where('joueur_id', $this->id)->cursor();
         $countess = false;
         $princeOrKing = false;
-        $idADetruire = -1;
+
         foreach($cartesDansMain  as $carteDansMain) {
             $carte = Cartes::where('id', $carteDansMain->carte_id)->firstOrFail();
             if($carte->nom == 'Countess'){
                 $countess = true;
-                $idADetruire = $carteDansMain->id;
+                $carteASuppr = $carteDansMain;
             } else if($carte->nom == 'King') $princeOrKing = true;
             else if($carte->nom == 'Prince') $princeOrKing = true;
         }
-        // TODO mettre la carte dans la défausse
-        if( $countess && $princeOrKing) Main::where('id', $idADetruire)->delete();
+        if( $countess && $princeOrKing){
+            $this->deleteCard($carteASuppr->carte_id);
+        }
+    }*/
+
+    private function deleteCard($carte_id){
+        Main::supprimerCarte($this->id, $carte_id);
+        $pileCartes = $this->getSalon()->getDefausse();
+        CartesDansPile::create([
+            'carte_id' => $carte_id,
+            'pile_cartes_id' => $pileCartes->id,
+            'joueur_id' => $this->id
+        ]);
     }
 
     public static function getJoueurByUsername($username) {
@@ -189,6 +186,16 @@ class Joueur extends Model
     public function delete() {
         Main::where('joueur_id', $this->id)->delete();
         Joueur::where('id', $this->id)->delete();
+    }
+
+    public function elemine(){
+        $this->est_elimine = true;
+        $this->save();
+        //On delete toute ses cartes
+        $cartesDansMain = Main::where('joueur_id', $this->id)->cursor();
+        foreach ($cartesDansMain as $carte){
+            $this->deleteCard($carte->id);
+        }
     }
 
 }

@@ -16,6 +16,7 @@ class CreateCartesPileTable extends Migration
             $table->increments('id');//A voir si bien ou pas
             $table->integer('carte_id')->unsigned();
             $table->integer('pile_cartes_id')->unsigned();
+            $table->integer('joueur_id')->unsigned()->nullable();
         });
 
         Schema::table('cartes_dans_pile', function(Blueprint $table){

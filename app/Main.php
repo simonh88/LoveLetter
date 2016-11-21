@@ -24,6 +24,8 @@ class Main extends Model
           'joueur_id' => $idJoueur,
           'carte_id' => $idCarte
       ]);
-
+  }
+  public static function supprimerCarte($idJoueur, $idCarte) {
+      Main::where('joueur_id', $idJoueur)->where('carte_id', $idCarte)->delete();
   }
 }
