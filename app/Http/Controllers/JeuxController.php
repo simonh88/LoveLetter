@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Action;
+use App\Cartes;
 use Illuminate\Http\Request;
 use App\Joueur;
 use App\Salon;
@@ -60,6 +61,8 @@ class JeuxController extends Controller
         $joueur = Joueur::where('username', $username)->firstOrFail();
         if ($joueur->possedeCarte($carte_id))
         {
+            $this->verifPrincess($carte_id);
+            $this->verifHandmaid($carte_id);
             $joueur->play($carte_id);
             $joueur->endTurn();
         }
@@ -67,22 +70,13 @@ class JeuxController extends Controller
 
     public function playCible($carte_id, $joueur_cible){
         //TODO action sur la cible mais sans carte a deviner
-        $username = Auth::user()->name;
-        $joueur = Joueur::where('username', $username)->firstOrFail();
-        $salon = $joueur->getSalon();
-        if ($joueur->play($carte_id)) {
-            $joueur->endTurn();
-        }
+        $this->play($carte_id);
 
     }
 
     public function playCibleCarte($carte_id, $joueur_cible, $carte_devine){
         //TODO action sur la cible + devine sa carte
-        $username = Auth::user()->name;
-        $joueur = Joueur::where('username', $username)->firstOrFail();
-        if ($joueur->play($carte_id)) {
-            $joueur->endTurn();
-        }
+        $this->play($carte_id);
     }
 
     public function chat($msg) {
@@ -113,4 +107,19 @@ class JeuxController extends Controller
         return redirect('/jouer');
     }
 
+
+    /***************VERIFS REGLES*****************/
+    private function verifPrincess($carte_id){
+        $carte = Cartes::where('id', $carte_id)->firstOrFail();
+        if($carte->nom == 'Princess'){
+            Joueur::elimine();
+        }
+    }
+
+    private function verifHandmaid($carte_id){
+        $carte = Cartes::where('id', $carte_id)->firstOrFail();
+        if($carte->nom == "Handmaid"){
+            Joueur::handmaidJoue();
+        }
+    }
 }
