@@ -59,11 +59,10 @@ class JeuxController extends Controller
         $joueur = Joueur::getJoueurConnecte();
         if ($joueur->possedeCarte($carte_id)) {
             if(!$this->verifPrincess($carte_id)) {
+                $joueur->endTurn();
                 $joueur->play($carte_id);
                 $this->verifHandmaid($carte_id);
             }
-            $joueur->endTurn();
-            $joueur->play($carte_id);
         }
     }
 
