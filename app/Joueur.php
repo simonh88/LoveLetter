@@ -203,4 +203,8 @@ class Joueur extends Model
         return $this->is_ready;
     }
 
+    public static function getJoueurConnecte() {
+        return Joueur::getJoueurByUsername(Auth::user()->name);
+    }
+
 }

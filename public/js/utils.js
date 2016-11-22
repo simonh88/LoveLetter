@@ -9,6 +9,16 @@ var other_players = [];
 var numAction = 0;
 var ismyturn = false;
 var username = '';
+var defausses;
+
+defausses = {
+    'tapete': ['Princess', 'King'],
+    'jean'  : ['Priest', 'Princess']
+};
+
+function makeDefaussesTab() {
+
+}
 
 /**
  * Créé les boutons en fonction de cards[]
@@ -55,12 +65,15 @@ function myturn() {
         username = res['username'];
 
         // On set les cartes du joueur
-        if (res['main'] && !ismyturn) {
+        if (res['main'] && !ismyturn && res['main'] != cards) {
             cards = res['main'];
+            makeButtons();
         }
 
-        // Créer les boutons
-        makeButtons();
+
+        if (res['defausses']) {
+            defausses = res['defausses'];
+        }
 
         if (res['other_players']) {
             other_players = res['other_players'];

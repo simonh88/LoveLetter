@@ -57,14 +57,13 @@ class JeuxController extends Controller
     }
 
     public function play($carte_id) {
-        $username = Auth::user()->name;
-        $joueur = Joueur::where('username', $username)->firstOrFail();
+        $joueur = Joueur::getJoueurConnecte();
         if ($joueur->possedeCarte($carte_id))
         {
             $this->verifPrincess($carte_id);
             $this->verifHandmaid($carte_id);
-            $joueur->play($carte_id);
             $joueur->endTurn();
+            $joueur->play($carte_id);
         }
     }
 
@@ -80,26 +79,28 @@ class JeuxController extends Controller
     }
 
     public function chat($msg) {
-        $username = Auth::user()->name;
-        $joueur = Joueur::where('username', $username)->firstOrFail();
-        Action::joueurChat($joueur, $msg);
+        Action::joueurChat(Joueur::getJoueurConnecte(), $msg);
     }
 
     public function quit() {
-        $username = Auth::user()->name;
-        $joueur = Joueur::getJoueurByUsername();
+        $joueur = Joueur::getJoueurConnecte();
         $joueur->quitterSalon();
         return redirect("/");
     }
 
     public function ready() {
-        $username = Auth::user()->name;
-        $joueur = Joueur::getJoueurByUsername();
+        $joueur = Joueur::getJoueurConnecte();
+        $res = array();
         if (!$joueur->isReady())
         {
-            Action::messageServeur($joueur->getSalon(), $username . " est prêt");
+            Action::messageServeur($joueur->getSalon(), $joueur->username . " est prêt");
             $joueur->ready();
+            $res['success'] = 'OK';
+        } else {
+            $res['success'] = 'FAIL';
+            $res['message'] = 'Le joueur ' . $joueur->username . " est deja pret";
         }
+        return json_encode($res);
     }
 
     public function clearAllSalons() {
