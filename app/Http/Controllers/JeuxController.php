@@ -34,7 +34,7 @@ class JeuxController extends Controller
 
 
         if ($joueur->checkTurn()) {
-
+            //echo("C'est mon tour");
 
             if (!$joueur->aPioche()) {
                 $joueur->piocherCarte();
@@ -59,11 +59,11 @@ class JeuxController extends Controller
     public function play($carte_id) {
         $username = Auth::user()->name;
         $joueur = Joueur::where('username', $username)->firstOrFail();
-        if ($joueur->possedeCarte($carte_id))
-        {
-            $this->verifPrincess($carte_id);
-            $this->verifHandmaid($carte_id);
-            $joueur->play($carte_id);
+        if ($joueur->possedeCarte($carte_id)) {
+            if(!$this->verifPrincess($carte_id)) {
+                $joueur->play($carte_id);
+                $this->verifHandmaid($carte_id);
+            }
             $joueur->endTurn();
         }
     }
@@ -116,7 +116,9 @@ class JeuxController extends Controller
         $carte = Cartes::where('id', $carte_id)->firstOrFail();
         if($carte->nom == 'Princess'){
             Joueur::elimine();
+            return true;
         }
+        return false;
     }
 
     private function verifHandmaid($carte_id){

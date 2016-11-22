@@ -106,10 +106,10 @@ class Joueur extends Model
      */
     public static function handmaidJoue(){
         $joueur = Joueur::getJoueurByUsername(Auth::user()->name);
-        $msg = $joueur->username . " est immunisé pendant un tour";
-        Action::messageServeur($joueur->getSalon(), $msg);
         $joueur->est_protege = true;
         $joueur->save();
+        $msg = $joueur->username . " est immunisé pendant un tour";
+        Action::messageServeur($joueur->getSalon(), $msg);
     }
 
     public function getMain() {
@@ -144,11 +144,13 @@ class Joueur extends Model
         }
     }*/
 
-    private function deleteCard($carte_id){
-        Main::supprimerCarte($this->id, $carte_id);
+    private function deleteCard($carteMain_id){
+        $carteMain = Main::find($carteMain_id);
+        $carte = Cartes::where('id', $carteMain->carte_id)->firstOrFail();
+        Main::supprimerCarte($this->id, $carteMain_id);
         $pileCartes = $this->getSalon()->getDefausse();
         CartesDansPile::create([
-            'carte_id' => $carte_id,
+            'carte_id' => $carte->id,
             'pile_cartes_id' => $pileCartes->id,
             'joueur_id' => $this->id
         ]);
@@ -194,8 +196,9 @@ class Joueur extends Model
         $joueur->save();
         //On delete toute ses cartes
         $cartesDansMain = Main::where('joueur_id', $joueur->id)->cursor();
-        foreach ($cartesDansMain as $carte){
-            $joueur->deleteCard($carte->id);
+
+        foreach ($cartesDansMain as $carteMain){
+            $joueur->deleteCard($carteMain->id);
         }
     }
 
