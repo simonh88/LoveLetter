@@ -42,7 +42,7 @@ class Joueur extends Model
     }
 
     public function endTurn() {
-        $salon = Salon::where('id', $this->salon_id)->firstOrFail();
+        $salon = $this->salon();
         $salon->nextPlayer();
     }
 
