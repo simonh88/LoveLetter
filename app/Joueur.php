@@ -198,6 +198,12 @@ class Joueur extends Model
         foreach ($cartesDansMain as $carteMain){
             $joueur->deleteCard($carteMain->carte_id);
         }
+
+        $salon = $joueur->getSalon();
+        $msg = $joueur->username . " est éliminé, il a défausser la carte Princess";
+        Action::messageServeur($salon, $msg);
+        //TODO VERIFIER SIL NE RESTE QU'UN JOUEUR DU COUP PARTIE TERMINEE
+        // TODO SINON ON FAIT UN NEXTTURN
     }
 
     public function isReady() {
