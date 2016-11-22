@@ -106,10 +106,10 @@ class Joueur extends Model
      */
     public static function handmaidJoue(){
         $joueur = Joueur::getJoueurByUsername(Auth::user()->name);
-        $msg = $joueur->username . " est immunisé pendant un tour";
-        Action::messageServeur($joueur->getSalon(), $msg);
         $joueur->est_protege = true;
         $joueur->save();
+        $msg = $joueur->username . " est immunisé pendant un tour";
+        Action::messageServeur($joueur->getSalon(), $msg);
     }
 
     public function getMain() {
@@ -194,9 +194,16 @@ class Joueur extends Model
         $joueur->save();
         //On delete toute ses cartes
         $cartesDansMain = Main::where('joueur_id', $joueur->id)->cursor();
-        foreach ($cartesDansMain as $carte){
-            $joueur->deleteCard($carte->id);
+
+        foreach ($cartesDansMain as $carteMain){
+            $joueur->deleteCard($carteMain->carte_id);
         }
+
+        $salon = $joueur->getSalon();
+        $msg = $joueur->username . " est éliminé, il a défausser la carte Princess";
+        Action::messageServeur($salon, $msg);
+        //TODO VERIFIER SIL NE RESTE QU'UN JOUEUR DU COUP PARTIE TERMINEE
+        // TODO SINON ON FAIT UN NEXTTURN
     }
 
     public function isReady() {

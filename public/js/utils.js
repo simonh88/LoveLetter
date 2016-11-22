@@ -142,7 +142,7 @@ function play(card_id) {
         url += '/' + carte_devine;
     }
 
-    $.get(url, function () {
+    $.get(url, function () {    
         ismyturn = false;
     });
 
