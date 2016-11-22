@@ -144,13 +144,11 @@ class Joueur extends Model
         }
     }*/
 
-    private function deleteCard($carteMain_id){
-        $carteMain = Main::find($carteMain_id);
-        $carte = Cartes::where('id', $carteMain->carte_id)->firstOrFail();
-        Main::supprimerCarte($this->id, $carteMain_id);
+    private function deleteCard($carte_id){
+        Main::supprimerCarte($this->id, $carte_id);
         $pileCartes = $this->getSalon()->getDefausse();
         CartesDansPile::create([
-            'carte_id' => $carte->id,
+            'carte_id' => $carte_id,
             'pile_cartes_id' => $pileCartes->id,
             'joueur_id' => $this->id
         ]);
@@ -198,7 +196,7 @@ class Joueur extends Model
         $cartesDansMain = Main::where('joueur_id', $joueur->id)->cursor();
 
         foreach ($cartesDansMain as $carteMain){
-            $joueur->deleteCard($carteMain->id);
+            $joueur->deleteCard($carteMain->carte_id);
         }
     }
 
