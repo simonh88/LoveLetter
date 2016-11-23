@@ -34,7 +34,6 @@ class JeuxController extends Controller
 
 
         if ($joueur->checkTurn()) {
-            //echo("C'est mon tour");
 
             if (!$joueur->aPioche() && !$salon->pioche_vide()) {
                 $joueur->piocherCarte();
@@ -52,6 +51,10 @@ class JeuxController extends Controller
         $res['main'] = $joueur->getMain();
         $res['actions'] = $joueur->getSalon()->getActions();
         $res['other_players'] = $salon->other_players($joueur);
+        $res['points'] = $salon->getPoints();
+        $res['eliminations'] = $salon->getEliminations();
+        $res['protections'] = $salon->getProtections();
+        $res['defausses'] = $salon->getDefaussesJoueurs();
 
         return json_encode($res);
     }

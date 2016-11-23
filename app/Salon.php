@@ -375,4 +375,53 @@ class Salon extends Model
         }
     }
 
+    /**
+     * @return array qui associe username à nb_points
+     */
+    public function getPoints() {
+        $joueurs = $this->getJoueurs();
+        $res = array();
+        foreach ($joueurs as $joueur) {
+            $res[$joueur->username] = $joueur->nb_points;
+        }
+        return $res;
+    }
+
+    /**
+     * @return array qui associe username à est_elimine
+     */
+    public function getEliminations() {
+        $joueurs = $this->getJoueurs();
+        $res = array();
+        foreach ($joueurs as $joueur) {
+            $res[$joueur->username] = $joueur->est_elimine;
+        }
+        return $res;
+    }
+
+    /**
+     * @return array qui associe username à est_protege
+     */
+    public function getProtections() {
+        $joueurs = $this->getJoueurs();
+        $res = array();
+        foreach ($joueurs as $joueur) {
+            $res[$joueur->username] = $joueur->est_protege;
+        }
+        return $res;
+    }
+
+    /**
+     * @return array qui associe username à liste de carte dans défausse
+     */
+    public function getDefaussesJoueurs() {
+        $joueurs = $this->getJoueurs();
+        $res = array();
+        foreach ($joueurs as $joueur) {
+            $cartesDansDefausse = CartesDansPile::where('joueur_id', $joueur->id)->get()->toArray();
+            $res[$joueur->username] = $cartesDansDefausse;
+        }
+        return $res;
+    }
+
 }

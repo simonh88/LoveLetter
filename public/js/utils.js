@@ -59,7 +59,7 @@ function myturn() {
     $.get('/myturn', function (data) {
         var res = $.parseJSON(data);
 
-        //console.log(res);
+        console.log(res);
 
 
         username = res['username'];

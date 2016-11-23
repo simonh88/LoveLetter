@@ -23,8 +23,9 @@ class SalonsController extends Controller{
 
         $salon = Salon::getSalonById($n);
 
-        if ($salon->isFull()) {
+        if ($salon->isFull() && $joueur->salon_id != $n) {
             return redirect('/');
+
         }
 
         if ($joueur->dansAucunSalon() ) {
