@@ -60,5 +60,14 @@ class Action extends Model
         ]);
     }
 
+    public static function messageDebug(Salon $salon, $message) {
+        Action::create([
+            'salon_id' => $salon->id,
+            'type' => 'CHAT',
+            'source' => 'DEBUG',
+            'message' => $message,
+        ]);
+    }
+
 
 }

@@ -37,6 +37,7 @@ class Salon extends Model
         if ($prochainJoueur) {
             $this->id_prochain_joueur = $prochainJoueur->id;
         } else {
+            Action::messageDebug($this, "Fin du tour, retour au premier joueur");
             $this->id_prochain_joueur = 0;
             $this->nextPlayer();
         }
