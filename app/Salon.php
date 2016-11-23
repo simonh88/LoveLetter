@@ -29,8 +29,6 @@ class Salon extends Model
      */
     public function nextPlayer() {
 
-        // TODO nextPlayer si pioche non vide sinon fin manche
-        // TODO nextPlayer si au moins deux joueurs non elimine sinon fin manche
 
         if ($this->pioche_vide()) {
             /**
@@ -155,6 +153,7 @@ class Salon extends Model
      * Lance la partie
      */
     private function nouvelle_manche() {
+        // TODO check victoire
         $this->id_prochain_joueur = 0;
         $this->no_manche = $this->no_manche + 1;
         $this->save();
