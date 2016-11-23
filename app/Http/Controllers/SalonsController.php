@@ -18,8 +18,8 @@ class SalonsController extends Controller{
         $this->middleware('auth');
     }
 
-    public function show(Request $req, $n){
-        $joueur = Joueur::getJoueurByUsername($req->session()->get("username"));
+    public function show($n){
+        $joueur = Joueur::getJoueurConnecte();
 
         if ($joueur->dansAucunSalon() ) {
             $joueur->setSalon($n);
