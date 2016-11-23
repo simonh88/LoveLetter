@@ -134,12 +134,6 @@ class Joueur extends Model
         ]);
     }
 
-    public static function getJoueurByUsername($username) {
-        if(empty(Joueur::where('username', $username)->first())){
-            self::creerJoueur($username);
-        }
-        return Joueur::where('username', $username)->firstOrFail();
-    }
 
     public function quitterSalon() {
         $salon = $this->getSalon();
@@ -239,9 +233,11 @@ class Joueur extends Model
     public function princeEffect(){
         // TODO MESSAGE
         $main = Main::where('joueur_id', $this->id)->firstOrFail();
+        $debug = " id de la carte detruite " . $main->carte_id;
         $this->deleteCard($main->carte_id);
+        Action::messageDebug($this->getSalon(), $debug);
         $this->piocherCarte();
-        $msg = "Defausse puis repioche suite a prince joué";
+        $msg = "Defausse puis repioche suite a prince joué ";
         Action::messageServeur($this->getSalon(), $msg);
     }
 
