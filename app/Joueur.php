@@ -196,10 +196,6 @@ class Joueur extends Model
         return Joueur::where('username', $username)->firstOrFail();
     }
 
-    public static function getJoueurByUsername($username) {
-        return Joueur::where('username', $username)->firstOrFail();
-    }
-
     public function deleteMain() {
         Main::where('joueur_id', $this->id)->delete();
     }
@@ -224,6 +220,7 @@ class Joueur extends Model
     public function ajouterPoint() {
         $this->nb_points = $this->nb_points + 1;
         $this->save();
+        Action::messageServeur($this->getSalon(), $this->username . " a gagné un point");
     }
 
     public function kingEffect($id_joueur_cible){
