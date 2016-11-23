@@ -35,6 +35,10 @@ class Joueur extends Model
         return $this->belongsTo('App\Salon');
     }
 
+    public function estProtege(){
+        return $this->est_protege;
+    }
+
     public function checkTurn() {
         $salon = Salon::where('id', $this->salon_id)->firstOrFail();
         return $salon->id_prochain_joueur == $this->id;

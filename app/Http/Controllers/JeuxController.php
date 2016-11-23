@@ -77,46 +77,58 @@ class JeuxController extends Controller
     public function playCible($carte_id, $joueur_cibleUsername){
         //TODO action sur la cible mais sans carte a deviner
         //KingPrinceBaronPriest
-        $carte = Cartes::where('id', $carte_id)->first();
-        $joueur = Joueur::getJoueurConnecte();
-        $salon = $joueur->getSalon();
-        if (!$salon->is_playing) return;
-        $this->play($carte_id);
         $joueur_cible = Joueur::getJoueurByUsername($joueur_cibleUsername);
+        if(!$joueur_cible->estProtege()) {
+            $carte = Cartes::where('id', $carte_id)->first();
+            $joueur = Joueur::getJoueurConnecte();
+            $salon = $joueur->getSalon();
+            if (!$salon->is_playing) return;
+            $this->play($carte_id);
 
-        switch($carte->nom){
-            case "King":
-                $joueur->kingEffect($joueur_cible->id);
-                break;
-            case "Prince":
-                //Qu'une carte dans la main au moment là normalement
-                $mainCible = Main::where('joueur_id', $joueur_cible->id)->firstOrFail();
-                if(!$this->verifPrincess($mainCible->carte_id, $joueur_cible)){
-                    $joueur_cible->princeEffect();
-                }
-                break;
-            case "Baron":
-                $joueur->baronEffect($joueur_cible->id);
-                break;
-            case "Priest":
-                $joueur->priestEffect($joueur_cible);
-                break;
+
+            switch ($carte->nom) {
+                case "King":
+                    $joueur->kingEffect($joueur_cible->id);
+                    break;
+                case "Prince":
+                    //Qu'une carte dans la main au moment là normalement
+                    $mainCible = Main::where('joueur_id', $joueur_cible->id)->firstOrFail();
+                    if (!$this->verifPrincess($mainCible->carte_id, $joueur_cible)) {
+                        $joueur_cible->princeEffect();
+                    }
+                    break;
+                case "Baron":
+                    $joueur->baronEffect($joueur_cible->id);
+                    break;
+                case "Priest":
+                    $joueur->priestEffect($joueur_cible);
+                    break;
+            }
+            $salon->checkManche();
+        }else {
+            $msg = $joueur_cible->username . " est protégé veuillez rejouer";
+            Action::messageServeur($joueur_cible->getSalon(), $msg);
         }
-        $salon->checkManche();
     }
 
     public function playCibleCarte($carte_id, $joueur_cible, $carte_devine){
-        $joueur = Joueur::getJoueurConnecte();
-        $salon = $joueur->getSalon();
-        if (!$salon->is_playing) return;
-        Action::messageDebug($salon, "Dans playCibleCarte");
-        //TODO action sur la cible + devine sa carte
-        $this->play($carte_id);
-        $joueur->guardEffect($joueur_cible, $carte_devine);
-        $msg = $joueur->username .  " et " . $joueur_cible;
-        Action::messageServeur($joueur->getSalon(), $msg);
-        Action::messageDebug($salon, "Appel à check manche");
-        $salon->checkManche();
+        $joueurCible = Joueur::getJoueurByUsername($joueur_cible);
+        if(!$joueurCible->estProtege()) {
+            $joueur = Joueur::getJoueurConnecte();
+            $salon = $joueur->getSalon();
+            if (!$salon->is_playing) return;
+            Action::messageDebug($salon, "Dans playCibleCarte");
+            //TODO action sur la cible + devine sa carte
+            $this->play($carte_id);
+            $joueur->guardEffect($joueur_cible, $carte_devine);
+            $msg = $joueur->username . " et " . $joueur_cible;
+            Action::messageServeur($joueur->getSalon(), $msg);
+            Action::messageDebug($salon, "Appel à check manche");
+            $salon->checkManche();
+        }else {
+            $msg = $joueur_cible->username . " est protégé veuillez rejouer";
+            Action::messageServeur($joueurCible->getSalon(), $msg);
+        }
     }
 
     public function chat($msg) {
