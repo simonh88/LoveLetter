@@ -19,6 +19,7 @@ class CreateSalonsTable extends Migration
             $table->integer('id_prochain_joueur')->unsigned();
             $table->boolean('is_playing');
             $table->integer('nb_joueurs_presents')->unsigned();
+            $table->integer('no_manche')->unsigned();
         });
     }
 

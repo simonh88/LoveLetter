@@ -50,3 +50,9 @@ Route::get('clearAllSalons', 'JeuxController@clearAllSalons');
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+
+// ----------------------- TEST ------------------- //
+Route::get('/testMC', function () {
+    $joueur = \App\Joueur::getJoueurConnecte();
+    echo $joueur->valeurMeilleureCarte();
+});

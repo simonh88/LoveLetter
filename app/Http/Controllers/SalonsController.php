@@ -21,9 +21,14 @@ class SalonsController extends Controller{
     public function show($n){
         $joueur = Joueur::getJoueurConnecte();
 
+        $salon = Salon::getSalonById($n);
+
+        if ($salon->isFull()) {
+            return redirect('/');
+        }
+
         if ($joueur->dansAucunSalon() ) {
             $joueur->setSalon($n);
-            $salon = $joueur->getSalon();
             Action::messageServeur($salon, "Bienvenue à " . $joueur->username);
 
         }
