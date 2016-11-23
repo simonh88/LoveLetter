@@ -42,7 +42,7 @@ class Joueur extends Model
     }
 
     public function endTurn() {
-        $salon = $this->salon();
+        $salon = $this->getSalon();
         $salon->nextPlayer();
     }
 
