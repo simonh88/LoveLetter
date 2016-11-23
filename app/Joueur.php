@@ -239,13 +239,15 @@ class Joueur extends Model
         $carte = Cartes::where('id', $main->carte_id)->firstOrFail();
         $carteAdverse = Cartes::where('id', $mainAdverse->carte_id)->firstOrFail();
         $joueurCible = Joueur::where('id', $id_joueur_cible)->firstOrFail();
-        if($carte->value > $carteAdverse->value){
+        $msgDebug = $carte->nom . " " . $carte->valeur . " comparaison ". $carteAdverse->nom . " " . $carteAdverse->valeur;
+        Action::messageDebug($joueurCible->getSalon(), $msgDebug);
+        if($carte->valeur > $carteAdverse->valeur){
             //joueur_cible qui se fait eliminé
             $joueurCible->elimine();
             $msg =  $joueurCible->username . " a été éliminé cause comparaison Baron avec " . $this->username;
             Action::messageServeur($this->getSalon(), $msg);
 
-        }elseif($carte->value < $carteAdverse->value){
+        }elseif($carte->valeur < $carteAdverse->valeur){
             //joueur qui se fait eliminé
             $this->elimine();
             $msg = $this->username . " a été éliminé cause comparaison Baron avec " .$joueurCible->username;
