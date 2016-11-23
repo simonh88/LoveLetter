@@ -153,7 +153,7 @@ class Joueur extends Model
         $this->is_ready = true;
         $this->save();
         $salon = $this->getSalon();
-        if ($salon->auMoinsDeuxJoueurs() && $salon->toutLeMondeEstPret()) {
+        if ($salon->isFull() && $salon->toutLeMondeEstPret()) {
             $salon->commencer();
         }
     }

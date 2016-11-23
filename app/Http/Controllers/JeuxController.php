@@ -99,13 +99,15 @@ class JeuxController extends Controller
     }
 
     public function playCibleCarte($carte_id, $joueur_cible, $carte_devine){
-        //TODO action sur la cible + devine sa carte
-        $this->play($carte_id);
-
         $joueur = Joueur::getJoueurConnecte();
-        $joueur->guardEffect($joueur_cible, $carte_devine);
-        $msg = $joueur->username .  " et " . $joueur_cible;
-        Action::messageServeur($joueur->getSalon(), $msg);
+        if ($joueur->possedeCarte($carte_id)) {
+            //TODO action sur la cible + devine sa carte
+            $this->play($carte_id);
+            $joueur->guardEffect($joueur_cible, $carte_devine);
+            $msg = $joueur->username .  " et " . $joueur_cible;
+            Action::messageServeur($joueur->getSalon(), $msg);
+            $this->endTurn();
+        }
     }
 
     public function chat($msg) {

@@ -146,25 +146,29 @@ class Salon extends Model
     }
 
     /**
-     * Créé un nouvelle manche
+     * Créé un nouvelle manche si personne n'a gagné
      * Set l'id prochain joueur a 0
      * Reset pioche, défausses et mains
      * Reset l'elim des joueurs
      * Lance la partie
      */
     private function nouvelle_manche() {
-        // TODO check victoire
-        $this->id_prochain_joueur = 0;
-        $this->no_manche = $this->no_manche + 1;
-        $this->save();
-        $this->vider_defausse();
-        $this->vider_pioche();
-        $this->supprimer_mains();
-        $this->reset_elimination_joueur();
-        self::init_pioche($this->getPioche());
-        Action::messageServeur($this, "La manche n° " . $this->no_manche. " commence");
-        $this->distribuerCartes();
-        $this->nextPlayer();
+        if (($j = $this->checkVictoire())) {
+            Action::messageServeur($this, $j->username . " a gané la partie");
+            // TODO fermer le salon
+        } else {
+            $this->id_prochain_joueur = 0;
+            $this->no_manche = $this->no_manche + 1;
+            $this->save();
+            $this->vider_defausse();
+            $this->vider_pioche();
+            $this->supprimer_mains();
+            $this->reset_elimination_joueur();
+            self::init_pioche($this->getPioche());
+            Action::messageServeur($this, "La manche n° " . $this->no_manche. " commence");
+            $this->distribuerCartes();
+            $this->nextPlayer();
+        }
     }
 
     /**
@@ -308,7 +312,10 @@ class Salon extends Model
      * @return bool vrai si il reste plus de deux joueurs dans le salon non éliminés
      */
     public function auMoinsDeuxJoueursNonElimines() {
-        return Joueur::where('salon_id', $this->id)->where('est_elimine', false)->count() >= 2;
+
+        $res =  Joueur::where('salon_id', $this->id)->where('est_elimine', false)->count() >= 2;
+        Action::messageDebug($this, "auMoinsDeuxJoueursNonElimines ret " . $res);
+        return $res;
     }
 
     /**
@@ -344,4 +351,22 @@ class Salon extends Model
     public static function getSalonById($n) {
         return Salon::where('id', $n)->first();
     }
+
+    protected function checkVictoire() {
+        $joueurs = $this->getJoueurs();
+        $points_pour_gagner = array(
+            2 => 7,
+            3 => 5,
+            4 => 4,
+        );
+
+        $ppg = $points_pour_gagner[$this->nb_joueurs_presents];
+        foreach ($joueurs as $joueur) {
+            if ($joueur->nb_points == $ppg) {
+                return $joueur;
+            }
+        }
+        return false;
+    }
+
 }
