@@ -41,7 +41,7 @@ class Joueur extends Model
     }
 
     public function endTurn() {
-        $salon = $this->salon()->first();
+        $salon = $this->getSalon();
         $salon->nextPlayer();
     }
 
@@ -103,12 +103,11 @@ class Joueur extends Model
      * Fonction checkant si le joueur joue un handmaid
      * et lui met une protectection si oui
      */
-    public static function handmaidJoue(){
-        $joueur = Joueur::getJoueurConnecte();
-        $joueur->est_protege = true;
-        $joueur->save();
-        $msg = $joueur->username . " est immunisé pendant un tour";
-        Action::messageServeur($joueur->getSalon(), $msg);
+    public function handmaidJoue(){
+        $this->est_protege = true;
+        $this->save();
+        $msg = $this->username . " est immunisé pendant un tour";
+        Action::messageServeur($this->getSalon(), $msg);
     }
 
     public function getMain() {
@@ -133,6 +132,13 @@ class Joueur extends Model
             'pile_cartes_id' => $pileCartes->id,
             'joueur_id' => $this->id
         ]);
+    }
+
+    public static function getJoueurByUsername($username) {
+        if(empty(Joueur::where('username', $username)->first())){
+            self::creerJoueur($username);
+        }
+        return Joueur::where('username', $username)->firstOrFail();
     }
 
     public function quitterSalon() {
@@ -161,7 +167,8 @@ class Joueur extends Model
         Joueur::where('id', $this->id)->delete();
     }
 
-    public static function elimine(){
+
+    public function elimine(){
         $joueur = self::getJoueurConnecte();
         $joueur->est_elimine = true;
         $joueur->save();
@@ -173,8 +180,6 @@ class Joueur extends Model
         }
 
         $salon = $joueur->getSalon();
-        $msg = $joueur->username . " est éliminé, il a défausser la carte Princess";
-        Action::messageServeur($salon, $msg);
         //TODO VERIFIER SIL NE RESTE QU'UN JOUEUR DU COUP PARTIE TERMINEE
         // TODO SINON ON FAIT UN NEXTTURN
     }
@@ -219,6 +224,78 @@ class Joueur extends Model
     public function ajouterPoint() {
         $this->nb_points = $this->nb_points + 1;
         $this->save();
+    }
+
+    public function kingEffect($id_joueur_cible){
+        //TODO MESSAGE
+        //Normalement ils n'ont qu'une carte chacun au moment là
+        $mainAdverse = Main::where('joueur_id', $id_joueur_cible)->firstOrFail();
+        $main = Main::where('joueur_id', $this->id)->firstOrFail();
+        Main::ajouterCarte($id_joueur_cible, $main->carte_id);
+        Main::ajouterCarte($this->id, $mainAdverse->carte_id);
+        Main::supprimerCarte($id_joueur_cible, $mainAdverse->carte_id);
+        Main::supprimerCarte($this->id, $main->carte_id);
+        $msg = "Echange de cartes car king joué";
+        Action::messageServeur($this->getSalon(), $msg);
+    }
+
+    public function princeEffect(){
+        // TODO MESSAGE
+        $main = Main::where('joueur_id', $this->id)->firstOrFail();
+        $this->deleteCard($main->carte_id);
+        $this->piocherCarte();
+        $msg = "Defausse puis repioche suite a prince joué";
+        Action::messageServeur($this->getSalon(), $msg);
+    }
+
+    public function baronEffect($id_joueur_cible){
+        // TODO MESSAGE
+        $main = Main::where('joueur_id', $this->id)->firstOrFail();
+        $mainAdverse = Main::where('joueur_id', $id_joueur_cible)->firstOrFail();
+        $carte = Cartes::where('id', $main->carte_id)->firstOrFail();
+        $carteAdverse = Cartes::where('id', $mainAdverse->carte_id)->firstOrFail();
+        $joueurCible = Joueur::where('id', $id_joueur_cible)->firstOrFail();
+        $msgDebug = $carte->nom . " " . $carte->valeur . " comparaison ". $carteAdverse->nom . " " . $carteAdverse->valeur;
+        Action::messageDebug($joueurCible->getSalon(), $msgDebug);
+        if($carte->valeur > $carteAdverse->valeur){
+            //joueur_cible qui se fait eliminé
+            $joueurCible->elimine();
+            $msg =  $joueurCible->username . " a été éliminé cause comparaison Baron avec " . $this->username;
+            Action::messageServeur($this->getSalon(), $msg);
+
+        }elseif($carte->valeur < $carteAdverse->valeur){
+            //joueur qui se fait eliminé
+            $this->elimine();
+            $msg = $this->username . " a été éliminé cause comparaison Baron avec " .$joueurCible->username;
+            Action::messageServeur($this->getSalon(), $msg);
+
+        }else{
+            //=
+            $msg = $this->username . " et " . $joueurCible->username . " avaient des cartes de même valeur(comp Baron)";
+            Action::messageServeur($this->getSalon(), $msg);
+        }
+
+    }
+
+    public function priestEffect($joueurCible){
+
+    }
+
+    public function guardEffect($joueurCibleUsername, $carte_devine){
+        $joueurCible = self::getJoueurByUsername($joueurCibleUsername);
+        $mainAdverse = Main::where('joueur_id', $joueurCible->id)->firstOrFail();
+        $carteAdverse = Cartes::where('id', $mainAdverse->carte_id)->firstOrFail();
+        //DEBUG
+        $msg1 = $carteAdverse->nom . " == " . $carte_devine;
+        Action::messageServeur($this->getSalon(),  $msg1);
+        if($carteAdverse->nom == $carte_devine){
+            $joueurCible->elimine();
+            $msg = $joueurCible->username . " a été éliminé car guard et trouvé bonne carte";
+            Action::messageServeur($this->getSalon(), $msg);
+        }else{
+            $msg = "guard joué mais mauvaise carte proposée donc sans effets";
+            Action::messageServeur($this->getSalon(), $msg);
+        }
     }
 
 }

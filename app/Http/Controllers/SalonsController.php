@@ -20,6 +20,7 @@ class SalonsController extends Controller{
 
     public function show($n){
         $joueur = Joueur::getJoueurConnecte();
+
         $salon = Salon::getSalonById($n);
 
         if ($salon->isFull()) {
