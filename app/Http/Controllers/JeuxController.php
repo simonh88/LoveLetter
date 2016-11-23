@@ -58,6 +58,8 @@ class JeuxController extends Controller
 
     public function play($carte_id) {
         $joueur = Joueur::getJoueurConnecte();
+        $salon = $joueur->getSalon();
+        if (!$salon->is_playing) return;
         if ($joueur->possedeCarte($carte_id)) {
             //Si verifPrincess est vrai, on ne fait rien, le joueur se fait eliminer
             if(!$this->verifPrincess($carte_id, $joueur)) {
@@ -66,6 +68,7 @@ class JeuxController extends Controller
                 $this->verifHandmaid($carte_id, $joueur);
             }
         }
+        $salon->checkManche();
     }
 
     public function playCible($carte_id, $joueur_cibleUsername){
@@ -73,8 +76,9 @@ class JeuxController extends Controller
         //KingPrinceBaronPriest
         $carte = Cartes::where('id', $carte_id)->first();
         $joueur = Joueur::getJoueurConnecte();
-        $joueur->endTurn();
-        $joueur->play($carte_id);
+        $salon = $joueur->getSalon();
+        if (!$salon->is_playing) return;
+        $this->play($carte_id);
         $joueur_cible = Joueur::getJoueurByUsername($joueur_cibleUsername);
 
         switch($carte->nom){
@@ -95,19 +99,21 @@ class JeuxController extends Controller
                 $joueur->priestEffect($joueur_cible);
                 break;
         }
-
+        $salon->checkManche();
     }
 
     public function playCibleCarte($carte_id, $joueur_cible, $carte_devine){
         $joueur = Joueur::getJoueurConnecte();
-        if ($joueur->possedeCarte($carte_id)) {
-            //TODO action sur la cible + devine sa carte
-            $this->play($carte_id);
-            $joueur->guardEffect($joueur_cible, $carte_devine);
-            $msg = $joueur->username .  " et " . $joueur_cible;
-            Action::messageServeur($joueur->getSalon(), $msg);
-            $this->endTurn();
-        }
+        $salon = $joueur->getSalon();
+        if (!$salon->is_playing) return;
+        Action::messageDebug($salon, "Dans playCibleCarte");
+        //TODO action sur la cible + devine sa carte
+        $this->play($carte_id);
+        $joueur->guardEffect($joueur_cible, $carte_devine);
+        $msg = $joueur->username .  " et " . $joueur_cible;
+        Action::messageServeur($joueur->getSalon(), $msg);
+        Action::messageDebug($salon, "Appel à check manche");
+        $salon->checkManche();
     }
 
     public function chat($msg) {

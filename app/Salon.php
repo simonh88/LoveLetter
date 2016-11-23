@@ -29,51 +29,22 @@ class Salon extends Model
      */
     public function nextPlayer() {
 
+        // On passe au prochain joueur
+        $id_prochain_joueur = $this->id_prochain_joueur;
+        $prochainJoueur = Joueur::where('salon_id', $this->id)
+            ->where('id', '>', $id_prochain_joueur)
+            ->where('est_elimine', false)
+            ->first();
 
-        if ($this->pioche_vide()) {
-            /**
-             * La pioche est vide, c'est la fin de la manche
-             * On récupère le joueur qui possède la carte la plus grande
-             * On lui ajoute un point
-             * On démarre une nouvelle manche
-             */
-            Action::messageServeur($this, "Fin de la manche");
-            Action::messageDebug($this, "La pioche est vide");
-            $joueur_gagnant = $this->joueur_carte_superieur();
-            $joueur_gagnant->ajouterPoint();
-            $this->nouvelle_manche();
-
-        } elseif (! $this->auMoinsDeuxJoueursNonElimines()) {
-            /**
-             * Il ne reste qu'un joueur non éliminé
-             * On récupère ce joueur et on lui ajoute un point
-             * On démarre une nouvelle manche
-             */
-            Action::messageServeur($this, "Fin de la manche");
-            Action::messageDebug($this, "Il ne reste qu'un joueur");
-            $joueur_gagnant = $this->dernierJoueurNonElimine();
-            $joueur_gagnant->ajouterPoint();
-            $this->nouvelle_manche();
+        if ($prochainJoueur) {
+            $this->id_prochain_joueur = $prochainJoueur->id;
         } else {
-            // On passe au prochain joueur
-            $id_prochain_joueur = $this->id_prochain_joueur;
-            $prochainJoueur = Joueur::where('salon_id', $this->id)
-                ->where('id', '>', $id_prochain_joueur)
-                ->where('est_elimine', false)
-                ->first();
-
-            if ($prochainJoueur) {
-                $this->id_prochain_joueur = $prochainJoueur->id;
-            } else {
-                Action::messageDebug($this, "Fin du tour, retour au premier joueur");
-                $this->id_prochain_joueur = 0;
-                $this->nextPlayer();
-            }
-
-            $this->save();
+            Action::messageDebug($this, "Fin du tour, retour au premier joueur");
+            $this->id_prochain_joueur = 0;
+            $this->nextPlayer();
         }
 
-
+        $this->save();
     }
 
     /**
@@ -293,10 +264,10 @@ class Salon extends Model
             $pioche = $this->getPioche();
             $defausse = $this->getDefausse();
             $this->no_manche = 0;
+            $this->id_prochain_joueur = 0;
+            $this->is_playing = false;
             CartesDansPile::where('pile_cartes_id', $pioche->id)->delete();
             CartesDansPile::where('pile_cartes_id', $defausse->id)->delete();
-            self::init_pioche($pioche);
-
         }
         $this->save();
     }
@@ -313,8 +284,7 @@ class Salon extends Model
      */
     public function auMoinsDeuxJoueursNonElimines() {
 
-        $res =  Joueur::where('salon_id', $this->id)->where('est_elimine', false)->count() >= 2;
-        Action::messageDebug($this, "auMoinsDeuxJoueursNonElimines ret " . $res);
+        $res =  (Joueur::where('salon_id', $this->id)->where('est_elimine', false)->count() >= 2);
         return $res;
     }
 
@@ -367,6 +337,42 @@ class Salon extends Model
             }
         }
         return false;
+    }
+
+    public function checkManche() {
+        if ($this->pioche_vide()) {
+            /**
+             * La pioche est vide, c'est la fin de la manche
+             * On récupère le joueur qui possède la carte la plus grande
+             * On lui ajoute un point
+             * On démarre une nouvelle manche
+             */
+            Action::messageServeur($this, "Fin de la manche");
+            Action::messageDebug($this, "La pioche est vide");
+            $joueur_gagnant = $this->joueur_carte_superieur();
+            Action::messageDebug($this, "Le joueur aillant la carte sup est " . $joueur_gagnant->username);
+            $joueur_gagnant->ajouterPoint();
+            $this->nouvelle_manche();
+
+        } elseif (! $this->auMoinsDeuxJoueursNonElimines()) {
+            /**
+             * Il ne reste qu'un joueur non éliminé
+             * On récupère ce joueur et on lui ajoute un point
+             * On démarre une nouvelle manche
+             */
+            Action::messageServeur($this, "Fin de la manche");
+            Action::messageDebug($this, "Il ne reste qu'un joueur");
+            $joueur_gagnant = $this->dernierJoueurNonElimine();
+            Action::messageDebug($this, "Le dernier joueur est " . $joueur_gagnant->username);
+            $joueur_gagnant->ajouterPoint();
+            $this->nouvelle_manche();
+        }
+        if (($j = $this->checkVictoire())) {
+            Action::messageServeur($this, $j->username . " a gagné !");
+            Action::messageServeur($this, "Veuillez quitter le salon");
+            $this->is_playing = false;
+            $this->save();
+        }
     }
 
 }

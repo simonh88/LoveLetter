@@ -190,6 +190,10 @@ class Joueur extends Model
         return Joueur::where('username', $username)->firstOrFail();
     }
 
+    public static function getJoueurByUsername($username) {
+        return Joueur::where('username', $username)->firstOrFail();
+    }
+
     public function deleteMain() {
         Main::where('joueur_id', $this->id)->delete();
     }
