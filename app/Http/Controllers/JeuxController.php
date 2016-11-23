@@ -35,7 +35,7 @@ class JeuxController extends Controller
         if ($joueur->checkTurn()) {
             //echo("C'est mon tour");
 
-            if (!$joueur->aPioche()) {
+            if (!$joueur->aPioche() && !$salon->pioche_vide()) {
                 $joueur->piocherCarte();
             }
 

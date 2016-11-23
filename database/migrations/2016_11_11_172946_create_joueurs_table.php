@@ -20,6 +20,7 @@ class CreateJoueursTable extends Migration
             $table->boolean('is_ready');
             $table->boolean('est_elimine');
             $table->boolean('est_protege');
+            $table->integer('nb_points')->unsigned();
         });
 
         Schema::table('joueurs', function(Blueprint $table){

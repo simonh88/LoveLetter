@@ -5,7 +5,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class Joueur extends Model
 {
@@ -29,11 +28,11 @@ class Joueur extends Model
     }
 
     public function main(){
-        return $this->hasMany('App\Models\Main');
+        return $this->hasMany('App\Main');
     }
 
     public function salon(){
-        return $this->belongsTo('App\Models\Salon');
+        return $this->belongsTo('App\Salon');
     }
 
     public function checkTurn() {
@@ -42,7 +41,7 @@ class Joueur extends Model
     }
 
     public function endTurn() {
-        $salon = $this->salon();
+        $salon = $this->salon()->first();
         $salon->nextPlayer();
     }
 
@@ -105,7 +104,7 @@ class Joueur extends Model
      * et lui met une protectection si oui
      */
     public static function handmaidJoue(){
-        $joueur = Joueur::getJoueurByUsername(Auth::user()->name);
+        $joueur = Joueur::getJoueurConnecte();
         $joueur->est_protege = true;
         $joueur->save();
         $msg = $joueur->username . " est immunisé pendant un tour";
@@ -126,24 +125,6 @@ class Joueur extends Model
         return $cartes;
     }
 
-    /*private function checkCountessPrinceKing() {
-        $cartesDansMain = Main::where('joueur_id', $this->id)->cursor();
-        $countess = false;
-        $princeOrKing = false;
-
-        foreach($cartesDansMain  as $carteDansMain) {
-            $carte = Cartes::where('id', $carteDansMain->carte_id)->firstOrFail();
-            if($carte->nom == 'Countess'){
-                $countess = true;
-                $carteASuppr = $carteDansMain;
-            } else if($carte->nom == 'King') $princeOrKing = true;
-            else if($carte->nom == 'Prince') $princeOrKing = true;
-        }
-        if( $countess && $princeOrKing){
-            $this->deleteCard($carteASuppr->carte_id);
-        }
-    }*/
-
     private function deleteCard($carte_id){
         Main::supprimerCarte($this->id, $carte_id);
         $pileCartes = $this->getSalon()->getDefausse();
@@ -152,14 +133,6 @@ class Joueur extends Model
             'pile_cartes_id' => $pileCartes->id,
             'joueur_id' => $this->id
         ]);
-    }
-
-    public static function getJoueurByUsername() {
-        $username = Auth::user()->name;
-        if(empty(Joueur::where('username', $username)->first())){
-            self::creerJoueur($username);
-        }
-        return Joueur::where('username', $username)->firstOrFail();
     }
 
     public function quitterSalon() {
@@ -189,7 +162,7 @@ class Joueur extends Model
     }
 
     public static function elimine(){
-        $joueur = self::getJoueurByUsername();
+        $joueur = self::getJoueurConnecte();
         $joueur->est_elimine = true;
         $joueur->save();
         //On delete toute ses cartes
@@ -211,7 +184,41 @@ class Joueur extends Model
     }
 
     public static function getJoueurConnecte() {
-        return Joueur::getJoueurByUsername(Auth::user()->name);
+        $username = Auth::user()->name;
+        if(empty(Joueur::where('username', $username)->first())){
+            self::creerJoueur($username);
+        }
+        return Joueur::where('username', $username)->firstOrFail();
+    }
+
+    public static function getJoueurByUsername($username) {
+        return Joueur::where('username', $username)->firstOrFail();
+    }
+
+    public function deleteMain() {
+        Main::where('joueur_id', $this->id)->delete();
+    }
+
+    /**
+     * @return mixed la valeur de sa meilleure carte, utile à la fin d'une manche
+     */
+    public function valeurMeilleureCarte() {
+        $valMeilleure = 0;
+        foreach ($this->main()->cursor() as $carteDansMain) {
+            $v = Cartes::where('id', $carteDansMain->carte_id)->orderBy('valeur')->first()->valeur;
+            if ($v > $valMeilleure) {
+                $valMeilleure = $v;
+            }
+        }
+        return $valMeilleure;
+    }
+
+    /**
+     * Ajoute un point au joueur
+     */
+    public function ajouterPoint() {
+        $this->nb_points = $this->nb_points + 1;
+        $this->save();
     }
 
 }
