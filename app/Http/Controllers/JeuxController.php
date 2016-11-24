@@ -37,9 +37,18 @@ class JeuxController extends Controller
 
             if (!$joueur->aPioche() && !$salon->pioche_vide()) {
                 $joueur->piocherCarte();
+                // TODO VERIF COUNTESS + MESSAGE SI OUI
+                if($this->verifCountess()){
+                    $res['myturn'] = false;
+                    $joueur->countess();
+                    $joueur->endTurn();
+                    $salon->checkManche();
+                }
+
+            }else{
+                $res['myturn'] = true;
             }
 
-            $res['myturn'] = true;
 
         } else {
 
@@ -75,7 +84,6 @@ class JeuxController extends Controller
     }
 
     public function playCible($carte_id, $joueur_cibleUsername){
-        //TODO action sur la cible mais sans carte a deviner
         //KingPrinceBaronPriest
         $joueur_cible = Joueur::getJoueurByUsername($joueur_cibleUsername);
         if(!$joueur_cible->estProtege()) {
@@ -182,5 +190,22 @@ class JeuxController extends Controller
         if($carte->nom == "Handmaid"){
             $joueur->handmaidJoue();
         }
+    }
+
+    private function verifCountess(){
+        $joueur = Joueur::getJoueurConnecte();
+        $cartes = $joueur->getMain();
+        $countess = false;
+        $kingOrPrince = false;
+        foreach ($cartes as $carte){
+            if($carte->nom == "Countess") $countess = true;
+            if($carte->nom == "King") $kingOrPrince = true;
+            if($carte->nom == "Prince") $kingOrPrince = true;
+        }
+        if($countess && $kingOrPrince){
+
+            return true;
+        }
+        return false;
     }
 }

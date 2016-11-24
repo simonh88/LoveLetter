@@ -98,8 +98,6 @@ class Joueur extends Model
 
         Action::joueurJoue($this, $carte_id);
 
-        // TODO Si il joue un priest, il doit pouvoir choisir un joueur et voir sa main
-
         return true;
     }
 
@@ -178,8 +176,6 @@ class Joueur extends Model
         }
 
         $salon = $joueur->getSalon();
-        //TODO VERIFIER SIL NE RESTE QU'UN JOUEUR DU COUP PARTIE TERMINEE
-        // TODO SINON ON FAIT UN NEXTTURN
     }
 
     public function isReady() {
@@ -226,7 +222,6 @@ class Joueur extends Model
     }
 
     public function kingEffect($id_joueur_cible){
-        //TODO MESSAGE
         //Normalement ils n'ont qu'une carte chacun au moment là
         $mainAdverse = Main::where('joueur_id', $id_joueur_cible)->firstOrFail();
         $main = Main::where('joueur_id', $this->id)->firstOrFail();
@@ -239,7 +234,6 @@ class Joueur extends Model
     }
 
     public function princeEffect(){
-        // TODO MESSAGE
         $main = Main::where('joueur_id', $this->id)->firstOrFail();
         $debug = " id de la carte detruite " . $main->carte_id;
         $this->deleteCard($main->carte_id);
@@ -250,7 +244,6 @@ class Joueur extends Model
     }
 
     public function baronEffect($id_joueur_cible){
-        // TODO MESSAGE
         $main = Main::where('joueur_id', $this->id)->firstOrFail();
         $mainAdverse = Main::where('joueur_id', $id_joueur_cible)->firstOrFail();
         $carte = Cartes::where('id', $main->carte_id)->firstOrFail();
@@ -279,6 +272,12 @@ class Joueur extends Model
     }
 
     public function priestEffect($joueurCible){
+        //Il n'a qu'une carte de toute façon
+        $mainAdverse = Main::where('joueur_id', $joueurCible->id)->firstOrFail();
+        $carteAdverse = Cartes::where('id', $mainAdverse->carte_id)->firstOrFail();
+        $msg = $joueurCible->username . " a la carte : " . $carteAdverse->nom;
+        $joueur = Joueur::getJoueurConnecte();
+        //TODO MESSAGE AU $JOUEUR RIEN BESOIN D'AUTRE A FAIRE
 
     }
 
@@ -296,6 +295,19 @@ class Joueur extends Model
         }else{
             $msg = "guard joué mais mauvaise carte proposée donc sans effets";
             Action::messageServeur($this->getSalon(), $msg);
+        }
+    }
+
+    public function countess(){
+        // TODO MESSAGE A REMPLACER PAR UN MESSAGE AU JOUEUR
+        $msg = "Countess défaussée car il y avait un king ou un prince dans la main";
+        Action::messageDebug($this->getSalon(), $msg);
+        $cartes = Cartes::all();
+        foreach ($cartes as $carte){
+            if($carte->nom == "Countess"){
+                $this->play($carte->id);
+                break;
+            }
         }
     }
 
