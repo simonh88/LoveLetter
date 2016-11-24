@@ -18,6 +18,7 @@ class CreateActionsTable extends Migration
             $table->integer('salon_id')->unsigned();
             $table->string('type');
             $table->string('source');
+            $table->string('destination');
             $table->string('message');
             $table->integer('carte_id')->nullable()->unsigned();
         });

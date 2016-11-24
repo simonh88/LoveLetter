@@ -245,7 +245,7 @@ class Salon extends Model
     }
 
     public function getActions() {
-        return Action::where('salon_id', $this->id)->get()->toArray();
+        return Action::where('salon_id', $this->id)->where('destination', 'ALL')->get()->toArray();
     }
 
     /**
@@ -422,6 +422,14 @@ class Salon extends Model
             $res[$joueur->username] = $cartesDansDefausse;
         }
         return $res;
+    }
+
+    /**
+     * @param Joueur $joueur
+     * @return mixed les messages privés adressés à $joueur
+     */
+    public function getMessagesPrives(Joueur $joueur) {
+        return Action::where('salon_id', $this->id)->where('destination', $joueur->username)->get()->toArray();
     }
 
 }

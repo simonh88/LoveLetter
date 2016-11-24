@@ -6,7 +6,9 @@
 var cards = [];
 var actions = [];
 var other_players = [];
+var messages_prives = [];
 var numAction = 0;
+var numMessagePrive = 0;
 var ismyturn = false;
 var username = '';
 var defausses;
@@ -55,6 +57,16 @@ function printActions() {
     }
 }
 
+function printMessagesPrives() {
+    for (; numMessagePrive < messages_prives.length; numMessagePrive++) {
+        // afficher actions[numAction]
+        var messagePrive = messages_prives[numMessagePrive];
+        if ( messagePrive['type'] =='CHAT' ) {
+            printInfo("[-PRIVATE-] " + messagePrive['source'] + " dit -> " + messagePrive['message']);
+        }
+    }
+}
+
 function myturn() {
     $.get('/myturn', function (data) {
         var res = $.parseJSON(data);
@@ -84,8 +96,13 @@ function myturn() {
             actions = res['actions'];
         }
 
+        if (res['messages_prives']) {
+            messages_prives = res['messages_prives'];
+        }
+
         // On affiche les actions
         printActions();
+        printMessagesPrives();
 
         // On set myturn
         if (res['myturn'] && !ismyturn) {

@@ -10,7 +10,7 @@ class Action extends Model
     protected $primaryKey = 'id';//Par défaut, pas besoin de le spécifier là
 
     public $timestamps = false;
-    protected $fillable = ['salon_id', 'type', 'source', 'message', 'carte_id'];
+    protected $fillable = ['salon_id', 'type', 'source', 'destination', 'message', 'carte_id'];
 
 
     public function salon(){
@@ -27,6 +27,7 @@ class Action extends Model
             'salon_id' => $joueur->getSalon()->id,
             'type' => 'PLAY',
             'source' => $joueur->username,
+            'destination' => 'ALL',
             'message' => Cartes::where('id', $carte_id)->first()->nom,
             'carte_id' => $carte_id,
         ]);
@@ -42,6 +43,7 @@ class Action extends Model
             'salon_id' => $joueur->getSalon()->id,
             'type' => 'CHAT',
             'source' => $joueur->username,
+            'destination' => 'ALL',
             'message' => $message,
         ]);
     }
@@ -56,6 +58,7 @@ class Action extends Model
             'salon_id' => $salon->id,
             'type' => 'CHAT',
             'source' => 'SERVEUR',
+            'destination' => 'ALL',
             'message' => $message,
         ]);
     }
@@ -65,6 +68,22 @@ class Action extends Model
             'salon_id' => $salon->id,
             'type' => 'CHAT',
             'source' => 'DEBUG',
+            'destination' => 'ALL',
+            'message' => $message,
+        ]);
+    }
+
+    /**
+     * Le serveur envoie $message à $joueurCible
+     * @param Joueur $joueurCible
+     * @param $message
+     */
+    public static function messageServeurPrive(Joueur $joueurCible, $message) {
+        Action::create([
+            'salon_id' => $joueurCible->getSalon()->id,
+            'type' => 'CHAT',
+            'source' => 'SERVEUR',
+            'destination' => $joueurCible->username,
             'message' => $message,
         ]);
     }

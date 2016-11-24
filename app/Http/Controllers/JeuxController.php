@@ -36,6 +36,7 @@ class JeuxController extends Controller
         if ($joueur->checkTurn()) {
 
             if (!$joueur->aPioche() && !$salon->pioche_vide()) {
+                Action::messageServeurPrive($joueur, "C'est votre tour, vous piochez");
                 $joueur->piocherCarte();
                 // TODO VERIF COUNTESS + MESSAGE SI OUI
                 if($this->verifCountess()){
@@ -64,6 +65,7 @@ class JeuxController extends Controller
         $res['eliminations'] = $salon->getEliminations();
         $res['protections'] = $salon->getProtections();
         $res['defausses'] = $salon->getDefaussesJoueurs();
+        $res['messages_prives'] = $salon->getMessagesPrives($joueur);
 
         return json_encode($res);
     }
