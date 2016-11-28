@@ -13,14 +13,8 @@ var ismyturn = false;
 var username = '';
 var defausses;
 
-defausses = {
-    'tapete': ['Princess', 'King'],
-    'jean'  : ['Priest', 'Princess']
-};
-
-function makeDefaussesTab() {
-
-}
+var protections;
+var eliminations;
 
 /**
  * Créé les boutons en fonction de cards[]
@@ -31,6 +25,39 @@ function makeButtons() {
     cards.forEach(function (card) {
         choices_div.append('<button onclick="play(' + card['id'] + ')"><img style="display: inline-block;"  class="img-responsive img-rounded" width="220px" src="'+ card['image'] + '" alt="'+ card['nom'] +'"></button> ');
     })
+}
+
+function makeTabDefausses() {
+    var tabDefausses = $('#tab_defausse');
+    tabDefausses.empty();
+    var nbTDMax = 0;
+    var nbTD = 0;
+
+    for (var key in defausses) {
+        var s = "<tr>";
+        s += "<th>" + key + "</th>";
+        defausses[key].forEach(function (elem) {
+            s += "<td>";
+            s += elem['nom'];
+            s += "</td>";
+            nbTD += 1;
+
+        });
+        if (nbTD > nbTDMax) {
+            nbTDMax = nbTD;
+        } else {
+            for (var i = 0; i < nbTDMax - nbTD; i++) {
+                s += "<td></td>";
+            }
+        }
+        s += "</tr>";
+        tabDefausses.append(s);
+        nbTD = 0;
+    }
+}
+
+function makeTabEtats() {
+
 }
 
 
@@ -83,8 +110,24 @@ function myturn() {
         }
 
 
-        if (res['defausses']) {
+        if (res['defausses'] && res['defausses'] != defausses) {
             defausses = res['defausses'];
+            makeTabDefausses();
+        }
+
+        var etatChange = false;
+        if (res['eliminations'] && eliminations != res['eliminations']) {
+            eliminations = res['eliminations'];
+            etatChange = true;
+        }
+
+        if (res['protections'] && protections != res['protections']) {
+            protections = res['protections'];
+            etatChange = true;
+        }
+
+        if (etatChange) {
+            makeTabEtats();
         }
 
         if (res['other_players']) {

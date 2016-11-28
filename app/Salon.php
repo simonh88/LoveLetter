@@ -418,7 +418,7 @@ class Salon extends Model
         $joueurs = $this->getJoueurs();
         $res = array();
         foreach ($joueurs as $joueur) {
-            $cartesDansDefausse = CartesDansPile::where('joueur_id', $joueur->id)->get()->toArray();
+            $cartesDansDefausse = CartesDansPile::where('joueur_id', $joueur->id)->join('cartes', 'cartes_dans_pile.carte_id', '=', 'cartes.id')->get()->toArray();
             $res[$joueur->username] = $cartesDansDefausse;
         }
         return $res;
