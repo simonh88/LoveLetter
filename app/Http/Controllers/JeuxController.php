@@ -127,13 +127,9 @@ class JeuxController extends Controller
             $joueur = Joueur::getJoueurConnecte();
             $salon = $joueur->getSalon();
             if (!$salon->is_playing) return;
-            Action::messageDebug($salon, "Dans playCibleCarte");
-            //TODO action sur la cible + devine sa carte
+
             $this->play($carte_id);
             $joueur->guardEffect($joueur_cible, $carte_devine);
-            $msg = $joueur->username . " et " . $joueur_cible;
-            Action::messageServeur($joueur->getSalon(), $msg);
-            Action::messageDebug($salon, "Appel à check manche");
             $salon->checkManche();
         }else {
             $msg = $joueur_cible->username . " est protégé veuillez rejouer";

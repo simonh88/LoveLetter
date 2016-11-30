@@ -58,6 +58,28 @@ function makeTabDefausses() {
 
 function makeTabEtats() {
 
+    if (!protections || !eliminations) return;
+
+    var tabEtat = $('#tab_etat');
+    tabEtat.empty();
+
+    var s = "";
+    s += "<tr><td></td><th>Eliminé</th><th>Protégé</th>";
+
+    // Pour itérer sur les usernames
+    for (var key in eliminations) {
+        s += "<tr><th>" + key + "</th><td>";
+        if (eliminations[key]) {
+            s += "x";
+        }
+        s += "</td><td>";
+        if (protections[key]) {
+            s += "x";
+        }
+        s += "</td></tr>";
+    }
+
+    tabEtat.append(s);
 }
 
 
@@ -98,7 +120,7 @@ function myturn() {
     $.get('/myturn', function (data) {
         var res = $.parseJSON(data);
 
-        console.log(res);
+        //console.log(res);
 
 
         username = res['username'];
@@ -115,18 +137,13 @@ function myturn() {
             makeTabDefausses();
         }
 
-        var etatChange = false;
         if (res['eliminations'] && eliminations != res['eliminations']) {
             eliminations = res['eliminations'];
-            etatChange = true;
+            makeTabEtats();
         }
 
         if (res['protections'] && protections != res['protections']) {
             protections = res['protections'];
-            etatChange = true;
-        }
-
-        if (etatChange) {
             makeTabEtats();
         }
 
@@ -150,7 +167,6 @@ function myturn() {
         // On set myturn
         if (res['myturn'] && !ismyturn) {
             ismyturn = true;
-            printInfo("C'est votre tour!");
         }
 
 

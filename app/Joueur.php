@@ -249,23 +249,21 @@ class Joueur extends Model
         $carte = Cartes::where('id', $main->carte_id)->firstOrFail();
         $carteAdverse = Cartes::where('id', $mainAdverse->carte_id)->firstOrFail();
         $joueurCible = Joueur::where('id', $id_joueur_cible)->firstOrFail();
-        $msgDebug = $carte->nom . " " . $carte->valeur . " comparaison ". $carteAdverse->nom . " " . $carteAdverse->valeur;
-        Action::messageDebug($joueurCible->getSalon(), $msgDebug);
         if($carte->valeur > $carteAdverse->valeur){
             //joueur_cible qui se fait eliminé
             $joueurCible->elimine();
-            $msg =  $joueurCible->username . " a été éliminé cause comparaison Baron avec " . $this->username;
+            $msg =  $joueurCible->username . " a été éliminé à cause de la comparaison-Baron avec " . $this->username;
             Action::messageServeur($this->getSalon(), $msg);
 
         }elseif($carte->valeur < $carteAdverse->valeur){
             //joueur qui se fait eliminé
             $this->elimine();
-            $msg = $this->username . " a été éliminé cause comparaison Baron avec " .$joueurCible->username;
+            $msg = $this->username . " a été éliminé à cause de la comparaison-Baron avec " .$joueurCible->username;
             Action::messageServeur($this->getSalon(), $msg);
 
         }else{
             //=
-            $msg = $this->username . " et " . $joueurCible->username . " avaient des cartes de même valeur(comp Baron)";
+            $msg = $this->username . " et " . $joueurCible->username . " avaient des cartes de même valeur (comparaison-Baron)";
             Action::messageServeur($this->getSalon(), $msg);
         }
 
@@ -278,6 +276,7 @@ class Joueur extends Model
         $msg = $joueurCible->username . " a la carte : " . $carteAdverse->nom;
         $joueur = Joueur::getJoueurConnecte();
         //TODO MESSAGE AU $JOUEUR RIEN BESOIN D'AUTRE A FAIRE
+        Action::messageServeurPrive(Joueur::getJoueurConnecte(), $msg);
 
     }
 
@@ -285,15 +284,10 @@ class Joueur extends Model
         $joueurCible = self::getJoueurByUsername($joueurCibleUsername);
         $mainAdverse = Main::where('joueur_id', $joueurCible->id)->firstOrFail();
         $carteAdverse = Cartes::where('id', $mainAdverse->carte_id)->firstOrFail();
-        //DEBUG
-        $msg1 = $carteAdverse->nom . " == " . $carte_devine;
-        Action::messageServeur($this->getSalon(),  $msg1);
+
         if($carteAdverse->nom == $carte_devine){
             $joueurCible->elimine();
-            $msg = $joueurCible->username . " a été éliminé car guard et trouvé bonne carte";
-            Action::messageServeur($this->getSalon(), $msg);
-        }else{
-            $msg = "guard joué mais mauvaise carte proposée donc sans effets";
+            $msg = $joueurCible->username . " a été éliminé car il a été ciblé par un guard avec succès";
             Action::messageServeur($this->getSalon(), $msg);
         }
     }
